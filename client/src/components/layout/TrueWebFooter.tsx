@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 const NETWORK_LINKS = [
-    { name: 'Star Ranker', url: 'https://starranker.trueweb.ng', desc: 'AI SEO Optimization' },
-    { name: 'SafeNet', url: 'https://safenet.trueweb.ng', desc: 'Cybersecurity for Africa' },
-    { name: 'Pulse', url: 'https://pulse.trueweb.ng', desc: 'Real-time Analytics' },
-    { name: 'TrueWeb', url: 'https://trueweb.ng', desc: 'Parent Company' }
+    { name: 'HarvestAI', url: 'https://harvest.trueweb.tech', desc: 'AI Data Intelligence' },
+    { name: 'Star Ranker', url: 'https://starranker.trueweb.tech', desc: 'AI SEO Optimization' },
+    { name: 'SafeNet', url: 'https://safenet.trueweb.tech', desc: 'Cybersecurity Suite' },
+    { name: 'TrueWeb', url: 'https://trueweb.tech', desc: 'Parent Network' }
 ];
 
 export function TrueWebFooter() {

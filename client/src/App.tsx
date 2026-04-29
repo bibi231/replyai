@@ -12,18 +12,25 @@ import { useAuth } from './hooks/useAuth';
 
 import { Privacy } from './pages/Privacy';
 import { Terms } from './pages/Terms';
+import { Refund } from './pages/Refund';
+import { Cookies } from './pages/Cookies';
+
+import { CookieBanner } from './components/layout/CookieBanner';
 
 export default function App() {
     useAuth();
 
     return (
         <>
+            <CookieBanner />
             <div className="layout-wrapper" style={{ minHeight: 'calc(100vh - 48px)', paddingBottom: '48px' }}>
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/pricing" element={<Pricing />} />
                     <Route path="/privacy" element={<Privacy />} />
                     <Route path="/terms" element={<Terms />} />
+                    <Route path="/refund" element={<Refund />} />
+                    <Route path="/cookies" element={<Cookies />} />
                     <Route
                         path="/app"
                         element={
