@@ -37,11 +37,16 @@ export function Navbar() {
                         <>
                             <Link to="/app" className={`navbar-link ${pathname === '/app' ? 'active' : ''}`}>Generator</Link>
                             <Link to="/dashboard" className={`navbar-link ${pathname === '/dashboard' ? 'active' : ''}`}>History</Link>
+                            <Link to="/settings" className={`navbar-link ${pathname === '/settings' ? 'active' : ''}`}>Settings</Link>
                             <button className="navbar-signout" onClick={logOut}>Sign out</button>
                         </>
                     )}
                     {!user && (
-                        <Link to="/app" className="navbar-signin">Sign in</Link>
+                        <>
+                            <Link to="/pricing" className="navbar-link">Pricing</Link>
+                            <Link to="/app" className="navbar-signin">Sign in</Link>
+                            <Link to="/app" className="navbar-cta-small">Try Generator</Link>
+                        </>
                     )}
                 </div>
             </div>

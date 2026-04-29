@@ -1,14 +1,42 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Navbar } from '../components/layout/Navbar';
+import { useAuthStore } from '../store/authStore';
 
 const HEADLINE_WORDS = ['replies', 'responses', 'follow-ups', 'apologies', 'proposals'];
-const CHROME_STORE_URL = 'https://chrome.google.com/webstore';
 
 export function Home() {
   const [wordIdx, setWordIdx] = useState(0);
   const [displayed, setDisplayed] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+  const [email, setEmail] = useState('');
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const tickRef = useRef<number | undefined>(undefined);
+  
+  const [demoIdx, setDemoIdx] = useState(0);
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
+
+  const user = useAuthStore(s => s.user);
+  const credits = useAuthStore(s => s.credits);
+  const isFreeTier = !credits || (credits.paid === 0);
+
+  const DEMO_EMAILS = [
+    { 
+      initial: 'C', sender: 'Chidi Okonkwo', subject: 'Re: Invoice #2024-047 — Overdue', 
+      body: "Hello, I'm writing to follow up on the outstanding payment of ₦350,000 for the website redesign. It's been 3 weeks past the due date...",
+      reply: "I understand the urgency regarding Invoice #2024-047. I've just confirmed with our finance team, and the payment of ₦350,000 has been initiated."
+    },
+    { 
+      initial: 'A', sender: 'Aisha Bello', subject: 'Partnership Proposal: TrueWeb x TechLab', 
+      body: "We loved your previous work on SafeNet and would like to invite you for a 6-month partnership involving our data pipeline... are you free?",
+      reply: "Thank you for reaching out, Aisha! Your proposal sounds exciting. I've followed TrueWeb's work closely and would love to discuss the TechLab partnership."
+    },
+    { 
+      initial: 'T', sender: 'Tunde Adeyemi', subject: 'Internship Application – Bitrus SIWES', 
+      body: "I am writing to apply for the backend engineering internship. I have 2 years experience with Node.js and Drizzle ORM...",
+      reply: "Dear Tunde, your experience with Node.js and Drizzle is impressive. We'd like to schedule an interview next week to discuss your role further."
+    }
+  ];
 
   useEffect(() => {
     const word = HEADLINE_WORDS[wordIdx];
@@ -34,24 +62,27 @@ export function Home() {
     return () => clearTimeout(tickRef.current);
   }, [displayed, isDeleting, wordIdx]);
 
+  useEffect(() => {
+    if (!isDemoOpen) {
+      const interval = setInterval(() => {
+        setDemoIdx((i) => (i + 1) % DEMO_EMAILS.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [isDemoOpen]);
+
+  const activeDemo = DEMO_EMAILS[demoIdx];
+
+  const handleNewsletter = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setIsSubscribed(true);
+    setEmail('');
+  };
+
   return (
     <div className="home">
-      {/* Navbar */}
-      <nav className="home-nav">
-        <div className="home-nav-inner">
-          <Link to="/" className="nav-logo">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-            </svg>
-            ReplyAI
-          </Link>
-          <div className="nav-links">
-            <Link to="/pricing" className="nav-link">Pricing</Link>
-            <Link to="/dashboard" className="nav-link">Dashboard</Link>
-            <Link to="/app" className="nav-cta">Get started</Link>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero */}
       <section className="hero">
@@ -79,7 +110,7 @@ export function Home() {
           <p className="hero-sub">
             ReplyAI lives inside Gmail. Open any email, click one button,
             get 3 AI-written drafts tailored to your tone. Support for <b>English, Pidgin, Yoruba, Hausa & French</b>. 
-            Built for Nigerian professionals by TrueWeb Technologies.
+            Built for Nigerian professionals by TrueWeb Solutions.
           </p>
 
           <div className="hero-actions">
@@ -108,43 +139,89 @@ export function Home() {
           </div>
         </div>
 
-        {/* Floating demo mockup */}
-        <div className="hero-demo" aria-hidden>
-          <div className="demo-email-card">
+        {/* Floating demo mockup - Interactive */}
+        <div className="hero-demo" onDoubleClick={() => setIsDemoOpen(true)}>
+          <div className={`demo-email-card ${isDemoOpen ? 'minimized' : ''}`}>
             <div className="demo-email-header">
-              <div className="demo-avatar">C</div>
-              <div>
-                <div className="demo-sender">Chidi Okonkwo</div>
-                <div className="demo-subject">Re: Invoice #2024-047 — Overdue</div>
+              <div className="demo-avatar">{activeDemo.initial}</div>
+              <div className="demo-header-info">
+                <div className="demo-sender">{activeDemo.sender}</div>
+                <div className="demo-subject">{activeDemo.subject}</div>
               </div>
+              {!isDemoOpen && (
+                <div className="demo-indicator">Double-click to reply</div>
+              )}
             </div>
-            <p className="demo-body">
-              Hello, I'm writing to follow up on the outstanding payment of ₦350,000 for the website redesign. It's been 3 weeks past the due date...
-            </p>
-            <div className="demo-reply-btn">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-              </svg>
-              ReplyAI
-            </div>
+            <p className="demo-body">{activeDemo.body}</p>
+            {!isDemoOpen && (
+              <div className="demo-reply-btn" onClick={() => setIsDemoOpen(true)}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
+                Reply with AI
+              </div>
+            )}
           </div>
 
-          <div className="demo-panel-card">
-            <div className="demo-panel-header">
-              <span>Professional</span>
-              <span className="demo-credits">4 free left</span>
-            </div>
-            {[
-              { label: 'Short & direct', preview: 'Thank you for following up. I apologise for the delay — payment will be processed by...' },
-              { label: 'Warm & detailed', preview: 'I appreciate your patience regarding invoice #2047. I can confirm that the payment...' },
-            ].map((d) => (
-              <div key={d.label} className="demo-draft">
-                <span className="demo-draft-label">{d.label}</span>
-                <p className="demo-draft-text">{d.preview}</p>
-                <button className="demo-insert-btn">Insert into Gmail</button>
+          {isDemoOpen ? (
+            <div className="demo-whatsapp-ui animate-in">
+              <div className="whatsapp-header">
+                <div className="whatsapp-back" onClick={() => setIsDemoOpen(false)}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                     <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                </div>
+                <div className="whatsapp-user">
+                  <div className="whatsapp-avatar">{activeDemo.initial}</div>
+                  <div>
+                    <div className="whatsapp-name">ReplyAI Assistant</div>
+                    <div className="whatsapp-status">Typing drafts...</div>
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
+
+              <div className="whatsapp-chat">
+                <div className="chat-bubble received">
+                  {activeDemo.body}
+                </div>
+                <div className="chat-bubble sent ai-highlight">
+                  {activeDemo.reply}
+                </div>
+              </div>
+
+              <div className="whatsapp-input-area">
+                <div className="whatsapp-attachment">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                  </svg>
+                </div>
+                <div className="whatsapp-input-mock">
+                  Choose a tone and generate...
+                  <div className="whatsapp-smiley">😊</div>
+                </div>
+                <div className="whatsapp-mic">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                    <line x1="12" y1="19" x2="12" y2="23" />
+                    <line x1="8" y1="23" x2="16" y2="23" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="demo-panel-card">
+              <div className="demo-panel-header">
+                <span>Tone: Professional</span>
+                <span className="demo-credits">4 free left</span>
+              </div>
+              <div className="demo-draft active">
+                <span className="demo-draft-label">Draft 1</span>
+                <p className="demo-draft-text">{activeDemo.reply}</p>
+                <button className="demo-insert-btn" onClick={() => setIsDemoOpen(true)}>Open Interaction</button>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -192,42 +269,44 @@ export function Home() {
         </div>
       </section>
 
-      {/* Pricing preview */}
-      <section className="section">
+      {/* Newsletter & Sub-CTA */}
+      <section className="section section-newsletter">
         <div className="section-inner section-center">
-          <div className="section-label">Pricing</div>
-          <h2 className="section-title">Start free. Pay as you grow.</h2>
-          <p className="section-sub">5 free AI replies every month. No credit card needed to start.</p>
-          <Link to="/pricing" className="hero-cta-secondary" style={{ display: 'inline-flex', marginTop: 24 }}>
-            See all plans →
-          </Link>
-        </div>
-      </section>
+          <div className="newsletter-box">
+             <h2 className="newsletter-title">Get the ReplyAI Guide</h2>
+             <p className="newsletter-sub">Join 2,000+ Nigerian pros. Monthly tips on writing better emails.</p>
+             
+             {!isSubscribed ? (
+               <form onSubmit={handleNewsletter} className="newsletter-form">
+                 <input 
+                   type="email" 
+                   placeholder="Your email address" 
+                   required 
+                   value={email}
+                   onChange={e => setEmail(e.target.value)}
+                   className="newsletter-input"
+                 />
+                 <button type="submit" className="newsletter-btn">Join</button>
+               </form>
+             ) : (
+               <div className="newsletter-success">🎉 You're on the list! Check your inbox.</div>
+             )}
 
-      {/* Final CTA */}
-      <section className="section section-cta">
-        <div className="section-inner section-center">
-          <h2 className="cta-headline">Ready to stop dreading your inbox?</h2>
-          <p className="section-sub">Join professionals across Nigeria who already use ReplyAI.</p>
-          <Link to="/app" className="hero-cta-primary" style={{ marginTop: 28 }}>
-            Try ReplyAI — Free
-          </Link>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="home-footer">
-        <div className="footer-inner">
-          <div className="footer-logo">ReplyAI</div>
-          <div className="footer-links">
-            <Link to="/pricing">Pricing</Link>
-            <Link to="/dashboard">Dashboard</Link>
-            <Link to="/privacy">Privacy</Link>
-            <Link to="/terms">Terms</Link>
+             {/* Ad for non-subscribers/free users */}
+             {isFreeTier && (
+               <div className="ad-mini-box">
+                 <span className="ad-box-label">Ad · TrueWeb Network</span>
+                 <div className="ad-box-content">
+                    <h4>Dominate with <b>HarvestAI</b></h4>
+                    <p>Unlock business intelligence today.</p>
+                    <a href="https://harvest.trueweb.tech" target="_blank" rel="noopener">Learn more →</a>
+                 </div>
+               </div>
+             )}
           </div>
-          <div className="footer-copy">A TrueWeb Technologies Product · Abuja, Nigeria 🇳🇬</div>
         </div>
-      </footer>
+      </section>
+
     </div>
   );
 }

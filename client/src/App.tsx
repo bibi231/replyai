@@ -5,7 +5,7 @@ import { AppPage } from './pages/AppPage';
 import { Pricing } from './pages/Pricing';
 import { Dashboard } from './pages/Dashboard';
 import { AuthGuard } from './components/auth/AuthGuard';
-import { TrueWebFooter } from './components/layout/TrueWebFooter';
+import { UnifiedFooter } from './components/layout/UnifiedFooter';
 import { PricingModal } from './components/billing/PricingModal';
 import { ToastContainer } from './components/ui/Toast';
 import { useAuth } from './hooks/useAuth';
@@ -14,16 +14,17 @@ import { Privacy } from './pages/Privacy';
 import { Terms } from './pages/Terms';
 import { Refund } from './pages/Refund';
 import { Cookies } from './pages/Cookies';
+import { Settings } from './pages/Settings';
 
 import { CookieBanner } from './components/layout/CookieBanner';
+import { GlobalNetworkAd } from './components/ads/GlobalNetworkAd';
 
 export default function App() {
     useAuth();
 
     return (
-        <>
-            <CookieBanner />
-            <div className="layout-wrapper" style={{ minHeight: 'calc(100vh - 48px)', paddingBottom: '48px' }}>
+        <div className="app-container">
+            <main className="layout-wrapper">
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/pricing" element={<Pricing />} />
@@ -31,6 +32,11 @@ export default function App() {
                     <Route path="/terms" element={<Terms />} />
                     <Route path="/refund" element={<Refund />} />
                     <Route path="/cookies" element={<Cookies />} />
+                    <Route path="/settings" element={
+                        <AuthGuard>
+                            <Settings />
+                        </AuthGuard>
+                    } />
                     <Route
                         path="/app"
                         element={
@@ -48,11 +54,13 @@ export default function App() {
                         }
                     />
                 </Routes>
-            </div>
+            </main>
 
-            <TrueWebFooter />
+            <GlobalNetworkAd />
+            <UnifiedFooter />
             <PricingModal />
             <ToastContainer />
-        </>
+            <CookieBanner />
+        </div>
     );
 }

@@ -660,3 +660,190 @@ body {
     .cookie-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
     .cookie-actions { width: 100%; justify-content: flex-end; }
 }
+
+/* ============================================
+   GLOBAL NETWORK AD
+   ============================================ */
+.global-ad-banner {
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border-subtle);
+    padding: 32px 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.global-ad-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    background: radial-gradient(circle at center, var(--ad-accent), transparent 70%);
+    opacity: 0.05;
+    filter: blur(60px);
+}
+
+.global-ad-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    position: relative;
+    z-index: 1;
+}
+
+.global-ad-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ad-accent);
+    margin-bottom: 8px;
+}
+
+.global-ad-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.global-ad-tagline {
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+.global-ad-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    max-width: 600px;
+    line-height: 1.6;
+}
+
+.global-ad-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--text-primary);
+    color: var(--bg-base);
+    border-radius: var(--radius-lg);
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.2s;
+}
+
+.global-ad-cta:hover {
+    transform: translateY(-2px);
+    background: var(--ad-accent);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 768px) {
+    .global-ad-container { flex-direction: column; align-items: flex-start; gap: 24px; }
+    .global-ad-cta { width: 100%; justify-content: center; }
+}
+
+/* ============================================
+   NEWSLETTER & MINI AD
+   ============================================ */
+.section-newsletter {
+    background: var(--bg-surface);
+    padding: 80px 0;
+}
+
+.newsletter-box {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.newsletter-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.newsletter-sub {
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+}
+
+.newsletter-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 40px;
+}
+
+.newsletter-input {
+    flex: 1;
+    background: var(--bg-base);
+    border: 1px solid var(--border-subtle);
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+}
+
+.newsletter-btn {
+    background: var(--primary);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+}
+
+.ad-mini-box {
+    background: var(--bg-base);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    text-align: left;
+    margin-top: 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.ad-mini-box::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+    background: var(--primary);
+    filter: blur(50px);
+    opacity: 0.1;
+}
+
+.ad-box-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.ad-box-content h4 {
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.ad-box-content p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+}
+
+.ad-box-content a {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+}
