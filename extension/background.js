@@ -67,7 +67,8 @@ async function handleMessage(request, sender) {
                 body: JSON.stringify({
                     emailContent: request.emailContent,
                     tone: request.tone,
-                    context: request.context
+                    context: request.context,
+                    outputLanguage: request.outputLanguage
                 })
             });
 

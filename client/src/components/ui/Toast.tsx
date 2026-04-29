@@ -31,19 +31,21 @@ export function ToastContainer() {
         if (toasts.length > 0) {
             const timer = setTimeout(() => {
                 setToasts((prev) => prev.slice(1));
-            }, 3000);
+            }, 3500);
             return () => clearTimeout(timer);
         }
     }, [toasts]);
 
     return (
-        <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
+        <div className="toast-stack" role="region" aria-label="Notifications">
             {toasts.map((t) => (
-                <div key={t.id} className={`pointer-events-auto bg-[var(--bg-elevated)] border border-[var(--border)] px-4 py-3 rounded-[var(--radius)] shadow-lg flex items-center gap-3 animate-in slide-in-from-right-full ${t.type === 'success' ? 'border-l-4 border-l-[var(--success)]' :
-                        t.type === 'error' ? 'border-l-4 border-l-[var(--error)]' :
-                            'border-l-4 border-l-[var(--accent)]'
-                    }`}>
-                    <span className="text-sm font-medium">{t.message}</span>
+                <div key={t.id} className={`toast toast-${t.type}`}>
+                    <span className="toast-icon">
+                        {t.type === 'success' && '✓'}
+                        {t.type === 'error' && '✕'}
+                        {t.type === 'info' && 'i'}
+                    </span>
+                    <span className="toast-msg">{t.message}</span>
                 </div>
             ))}
         </div>

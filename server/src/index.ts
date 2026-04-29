@@ -6,7 +6,8 @@ import replyRoutes from './routes/reply.js';
 import creditsRoutes from './routes/credits.js';
 import authRoutes from './routes/auth.js';
 import webhookRoutes from './routes/webhook.js';
-import { GeminiParseError } from './utils/errors.js';
+import templatesRoutes from './routes/templates.js';
+import { AIAllModelsFailedError, AIParseError } from './services/aiService.js';
 import { logger } from './utils/logger.js';
 
 dotenv.config();
@@ -41,6 +42,7 @@ app.use(express.json());
 app.use('/api/reply', replyRoutes);
 app.use('/api/credits', creditsRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/templates', templatesRoutes);
 
 // Health check
 app.get('/health', (req: Request, res: Response) => {
@@ -51,8 +53,12 @@ app.get('/health', (req: Request, res: Response) => {
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     logger.error(err.message, err.stack);
 
-    if (err instanceof GeminiParseError) {
-        return res.status(503).json({ error: 'GEMINI_ERROR', message: err.message });
+    if (err instanceof AIAllModelsFailedError) {
+        return res.status(503).json({ error: 'AI_UNAVAILABLE', message: 'AI service temporarily unavailable.' });
+    }
+
+    if (err instanceof AIParseError) {
+        return res.status(503).json({ error: 'AI_PARSE_ERROR', message: 'AI returned unexpected response. Try again.' });
     }
 
     // Handle other knowable errors like generic validation or status

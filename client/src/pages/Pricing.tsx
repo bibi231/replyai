@@ -1,84 +1,81 @@
 import React from 'react';
-import { PageWrapper } from '../components/layout/PageWrapper';
-import { CREDIT_PACKS } from '../types';
+import { Navbar } from '../components/layout/Navbar';
 import { PaystackButton } from '../components/billing/PaystackButton';
+import { useCredits } from '../hooks/useCredits';
+import { useAuthStore } from '../store/authStore';
 
 export function Pricing() {
+  const { credits } = useCredits();
+  const user = useAuthStore(s => s.user);
+
+  const PACKS = [
+    { id: 'starter' as const, name: 'Starter', price: 1500, credits: 30, costPer: '₦50', features: ['30 reply generations', '90 total drafts', 'All 5 tone options', 'Never expires'] },
+    { id: 'pro' as const, name: 'Pro', price: 3500, credits: 100, costPer: '₦35', popular: true, features: ['100 reply generations', '300 total drafts', 'All 5 tone options', 'Priority generation', 'Never expires'] },
+    { id: 'power' as const, name: 'Power', price: 8000, credits: 300, costPer: '₦27', features: ['300 reply generations', '900 total drafts', 'All 5 tone options', 'Priority generation', 'Never expires'] },
+  ];
+
   return (
-    <PageWrapper>
-      <div className="max-w-5xl mx-auto w-full pt-8 pb-16">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl sm:text-5xl font-display font-bold text-white mb-4">Simple, Pay-As-You-Go Pricing</h1>
-          <p className="text-lg text-[var(--text-secondary)]">Buy credits once, use them forever. 1 credit = 3 reply drafts.</p>
+    <div className="pricing-page">
+      <Navbar />
+      <main className="pricing-main">
+        <div className="pricing-header">
+          <div className="section-label">Pricing</div>
+          <h1 className="pricing-title">Start free. Pay as you need.</h1>
+          <p className="pricing-sub">Everyone gets 5 free reply generations every month. Buy credits when you need more — they never expire.</p>
+          {credits && (
+            <div className="current-credits">
+              You currently have {credits.free > 0 ? `${credits.free} free ${credits.free === 1 ? 'reply' : 'replies'}` : '0 free replies'} remaining
+              {credits.paid > 0 && ` + ${credits.paid} paid credits`}.
+            </div>
+          )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
-          {CREDIT_PACKS.map((pack) => (
-            <div key={pack.id} className={`relative bg-[var(--bg-elevated)] border ${pack.popular ? 'border-[var(--accent)] shadow-[0_0_30px_rgba(108,99,255,0.15)] scale-105 z-10' : 'border-[var(--border)]'} rounded-2xl p-8 flex flex-col`}>
-              {pack.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--accent)] text-white text-xs font-bold uppercase tracking-wider py-1 px-4 rounded-full">
-                  Most Popular
+        <div className="pricing-cards">
+          {PACKS.map(pack => (
+            <div key={pack.id} className={`pricing-card ${pack.popular ? 'popular' : ''}`}>
+              {pack.popular && <div className="popular-badge">Most popular</div>}
+              <div className="pricing-card-header">
+                <span className="pricing-pack-name">{pack.name}</span>
+                <div className="pricing-price">
+                  <span className="pricing-amount">₦{pack.price.toLocaleString()}</span>
                 </div>
-              )}
-              
-              <div className="mb-8">
-                <h3 className="text-xl font-medium text-white mb-2">{pack.name}</h3>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-5xl font-display font-bold">₦{pack.price.toLocaleString()}</span>
-                </div>
-                <p className="text-[var(--text-secondary)] mt-2 text-sm">{pack.pricePerReply} per reply equivalent</p>
+                <div className="pricing-credits">{pack.credits} credits</div>
+                <div className="pricing-cost-per">{pack.costPer} per reply</div>
               </div>
-
-              <div className="flex-grow">
-                <ul className="space-y-4 mb-8">
-                  <li className="flex items-start text-[var(--text-primary)]">
-                    <svg className="w-5 h-5 text-[var(--success)] mr-3 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    {pack.credits} Credits
+              <ul className="pricing-features">
+                {pack.features.map(f => (
+                  <li key={f} className="pricing-feature">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                    {f}
                   </li>
-                  <li className="flex items-start text-[var(--text-primary)]">
-                    <svg className="w-5 h-5 text-[var(--success)] mr-3 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Credits never expire
-                  </li>
-                  <li className="flex items-start text-[var(--text-primary)]">
-                    <svg className="w-5 h-5 text-[var(--success)] mr-3 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Generate 3 drafts per credit
-                  </li>
-                </ul>
+                ))}
+              </ul>
+              <div className="pricing-card-footer">
+                {user ? (
+                  <PaystackButton packId={pack.id} className="w-full" />
+                ) : (
+                  <a href="/app" className="pricing-signin-cta">Sign in to purchase</a>
+                )}
               </div>
-
-              <PaystackButton packId={pack.id} className="w-full mt-auto" />
             </div>
           ))}
         </div>
 
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-display text-white mb-8 text-center">Frequently Asked Questions</h2>
-          <div className="grid gap-6">
-            <div className="bg-[var(--bg-surface)] p-6 rounded-2xl border border-[var(--border)]">
-              <h4 className="text-lg font-medium text-white mb-2">Do credits expire?</h4>
-              <p className="text-[var(--text-secondary)]">No, paid credits never expire. Free credits (5 per month) reset on the 1st of every calendar month.</p>
+        <div className="pricing-faq">
+          <h2 className="faq-title">Common questions</h2>
+          {[
+            { q: 'Do credits expire?', a: 'Paid credits never expire. Free credits reset on the 1st of every month.' },
+            { q: 'What counts as 1 credit?', a: '1 credit = 1 generation = 3 complete reply drafts delivered simultaneously.' },
+            { q: 'What payment methods work?', a: 'Visa, Mastercard, bank transfer, Verve, and USSD — all handled securely by Paystack.' },
+            { q: 'Can I use it on mobile?', a: 'The web dashboard works on any device. The Gmail extension requires Chrome on desktop.' },
+          ].map(item => (
+            <div key={item.q} className="faq-item">
+              <h3 className="faq-q">{item.q}</h3>
+              <p className="faq-a">{item.a}</p>
             </div>
-            <div className="bg-[var(--bg-surface)] p-6 rounded-2xl border border-[var(--border)]">
-              <h4 className="text-lg font-medium text-white mb-2">What counts as 1 generation?</h4>
-              <p className="text-[var(--text-secondary)]">One generation = 1 credit = 3 different reply drafts returned simultaneously.</p>
-            </div>
-            <div className="bg-[var(--bg-surface)] p-6 rounded-2xl border border-[var(--border)]">
-              <h4 className="text-lg font-medium text-white mb-2">Can I use it on mobile?</h4>
-              <p className="text-[var(--text-secondary)]">Yes! The web app is fully mobile-optimised, so you can copy-paste emails directly from your phone.</p>
-            </div>
-            <div className="bg-[var(--bg-surface)] p-6 rounded-2xl border border-[var(--border)]">
-              <h4 className="text-lg font-medium text-white mb-2">What payment methods are supported?</h4>
-              <p className="text-[var(--text-secondary)]">We use Paystack, which supports Visa, Mastercard, Verve, bank transfers, and USSD payments.</p>
-            </div>
-          </div>
+          ))}
         </div>
-      </div>
-    </PageWrapper>
+      </main>
+    </div>
   );
 }

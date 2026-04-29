@@ -10,7 +10,10 @@
         "jsx": "react-jsx",
         "strict": true,
         "esModuleInterop": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "types": [
+            "vite/client"
+        ]
     },
     "include": [
         "src"

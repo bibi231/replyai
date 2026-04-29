@@ -1,139 +1,306 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { PageWrapper } from '../components/layout/PageWrapper';
-import { EmailInput } from '../components/reply/EmailInput';
-import { ToneSelector } from '../components/reply/ToneSelector';
-import { GenerateButton } from '../components/reply/GenerateButton';
-import { ReplyCard } from '../components/reply/ReplyCard';
-import { Input } from '../components/ui/Input';
+import React, { useState, useRef, useEffect } from 'react';
 import { useReply } from '../hooks/useReply';
-import { ToneType } from '../types';
+import { useCredits } from '../hooks/useCredits';
+import { Navbar } from '../components/layout/Navbar';
+import { ReplyCardSkeleton } from '../components/ui/Skeleton';
+import { ReplyAIAd } from '../components/ads/ReplyAIAd';
+import { api } from '../lib/api';
+import type { ToneType, OutputLanguage } from '../types/index';
+import { OUTPUT_LANGUAGES } from '../types/index';
+
+const TONES: { value: ToneType; label: string; icon: string }[] = [
+    { value: 'professional', label: 'Professional', icon: '💼' },
+    { value: 'friendly', label: 'Friendly', icon: '😊' },
+    { value: 'firm', label: 'Firm', icon: '⚡' },
+    { value: 'apologetic', label: 'Apologetic', icon: '🤝' },
+    { value: 'custom', label: 'Custom', icon: '✏️' },
+];
+
+const LANGS = Object.entries(OUTPUT_LANGUAGES).map(([key, val]) => ({
+    value: key as OutputLanguage,
+    ...val
+}));
+
+const GENERATING_STEPS = [
+    'Reading your email...',
+    'Analysing tone and context...',
+    'Writing draft 1...',
+    'Writing draft 2...',
+    'Writing draft 3...',
+    'Polishing replies...',
+];
+
+const SAMPLE_EMAIL = `Hi,
+
+I wanted to follow up on the proposal I sent last Tuesday for the brand identity project. We're quite interested in working with your team and would love to get your thoughts.
+
+Could you let me know if you've had a chance to review it, and if there are any questions or adjustments you'd like to discuss?
+
+Looking forward to hearing from you.
+
+Best regards,
+Amara`;
 
 export function AppPage() {
+    const { replies, isGenerating, error, generate, clearReplies } = useReply();
+    const { credits, refreshCredits } = useCredits();
+
     const [emailContent, setEmailContent] = useState('');
     const [tone, setTone] = useState<ToneType>('professional');
-    const [customTone, setCustomTone] = useState('');
+    const [language, setLanguage] = useState<OutputLanguage>('en');
+    const [customInstruction, setCustomInstruction] = useState('');
     const [context, setContext] = useState('');
-    const [isContextOpen, setIsContextOpen] = useState(false);
-
-    const { replies, isGenerating, error, generate } = useReply();
+    const [showContext, setShowContext] = useState(false);
+    const [generatingStep, setGeneratingStep] = useState(0);
+    const [copiedId, setCopiedId] = useState<string | null>(null);
+    const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
+    const stepIntervalRef = useRef<number | undefined>(undefined);
     const outputRef = useRef<HTMLDivElement>(null);
 
-    const handleGenerate = () => {
-        let finalTone = tone;
-        let actualCustomTone = customTone;
-
-        if (tone === 'custom' && !customTone.trim()) {
-            actualCustomTone = 'Professional';
-        }
-
-        generate(
-            emailContent,
-            finalTone,
-            tone === 'custom' ? actualCustomTone : context
-        );
-    };
-
+    // Cycle through generating step text
     useEffect(() => {
-        if (replies.length > 0 && outputRef.current) {
-            if (window.innerWidth < 1024) {
-                outputRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (isGenerating) {
+            setGeneratingStep(0);
+            stepIntervalRef.current = window.setInterval(() => {
+                setGeneratingStep(s => Math.min(s + 1, GENERATING_STEPS.length - 1));
+            }, 900);
+        } else {
+            clearInterval(stepIntervalRef.current);
+            if (replies.length > 0) {
+                setTimeout(() => outputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
             }
         }
-    }, [replies]);
+        return () => clearInterval(stepIntervalRef.current);
+    }, [isGenerating, replies.length]);
+
+    async function handleGenerate() {
+        if (!emailContent.trim() || isGenerating) return;
+        clearReplies();
+        // useReply.generate takes (emailContent, tone, context?, language?)
+        const ctx = tone === 'custom' ? customInstruction : (context || undefined);
+        await generate(emailContent, tone, ctx, language);
+        refreshCredits();
+    }
+
+    async function handleSaveTemplate(draft: any) {
+        try {
+            await api.post('/api/templates', {
+                title: draft.label,
+                body: draft.body,
+                tone: tone,
+                category: 'reply'
+            });
+            setSavedIds(prev => new Set([...prev, draft.id]));
+        } catch (err) {
+            console.error('Failed to save template');
+        }
+    }
+
+    function handleCopy(id: string, body: string) {
+        navigator.clipboard.writeText(body);
+        setCopiedId(id);
+        setTimeout(() => setCopiedId(null), 2000);
+    }
+
+    const charCount = emailContent.length;
+    const charLimit = 3000;
+    const charPct = charCount / charLimit;
 
     return (
-        <PageWrapper>
-            <div className="flex flex-col lg:flex-row gap-8 h-full">
-                {/* Left Column - Input */}
-                <div className="w-full lg:w-1/2 flex flex-col h-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-2xl p-6 shadow-lg">
-                    <div className="flex-grow flex flex-col">
-                        <EmailInput
-                            value={emailContent}
-                            onChange={setEmailContent}
-                            disabled={isGenerating}
-                        />
-
-                        <ToneSelector
-                            tone={tone}
-                            setTone={setTone}
-                            customTone={customTone}
-                            setCustomTone={setCustomTone}
-                            disabled={isGenerating}
-                        />
-
-                        <div className="mt-4">
-                            <button
-                                onClick={() => setIsContextOpen(!isContextOpen)}
-                                className="text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors flex items-center gap-1"
-                            >
-                                {isContextOpen ? '− Hide context (optional)' : '+ Add context (optional)'}
-                            </button>
-
-                            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isContextOpen ? 'max-h-24 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
-                                <Input
-                                    value={context}
-                                    onChange={(e) => setContext(e.target.value)}
-                                    disabled={isGenerating}
-                                    maxLength={300}
-                                    placeholder="e.g. Reject the offer warmly, I'm too busy this week."
-                                />
-                            </div>
-                        </div>
-
-                        <div className="mt-auto">
-                            {error && (
-                                <div className="mt-4 p-3 bg-[var(--error)]/10 border border-[var(--error)]/20 text-[var(--error)] text-sm rounded-[var(--radius)]">
-                                    {error}
-                                </div>
-                            )}
-                            <GenerateButton
-                                onClick={handleGenerate}
-                                disabled={emailContent.trim().length === 0}
-                                isLoading={isGenerating}
-                            />
+        <div className="app-layout">
+            <Navbar />
+            <main className="app-main">
+                {/* Left panel */}
+                <div className="app-input-panel">
+                    <div className="input-panel-header">
+                        <h2 className="input-panel-title">Paste the email you received</h2>
+                        <div className={`char-counter ${charPct > 0.9 ? 'danger' : charPct > 0.75 ? 'warning' : ''}`}>
+                            {charCount}/{charLimit}
                         </div>
                     </div>
-                </div>
 
-                {/* Right Column - Output */}
-                <div ref={outputRef} className="w-full lg:w-1/2 flex flex-col h-full">
-                    {replies.length === 0 && !isGenerating ? (
-                        <div className="flex-grow flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-[var(--border)] rounded-2xl bg-[var(--bg-elevated)]/30 min-h-[400px]">
-                            <div className="w-16 h-16 rounded-full bg-[var(--bg-surface)] flex items-center justify-center mb-4 text-2xl border border-[var(--border)]">
-                                ✨
-                            </div>
-                            <h3 className="text-lg font-medium text-white mb-2">Ready to write</h3>
-                            <p className="text-[var(--text-secondary)] text-sm max-w-sm">
-                                Your 3 reply drafts will appear here. Pick a tone and hit Generate.
-                            </p>
+                    <textarea
+                        className="email-textarea"
+                        value={emailContent}
+                        onChange={e => setEmailContent(e.target.value.slice(0, charLimit))}
+                        placeholder="Paste any email here — job application, client follow-up, invoice chase, lecturer reply..."
+                        rows={10}
+                    />
+
+                    {!emailContent && (
+                        <button className="sample-email-btn" onClick={() => setEmailContent(SAMPLE_EMAIL)}>
+                            Try a sample email →
+                        </button>
+                    )}
+
+                    {/* Language Selector */}
+                    <div className="tone-section">
+                        <div className="tone-section-label">Reply Language</div>
+                        <div className="tone-pills">
+                            {LANGS.map(l => (
+                                <button
+                                    key={l.value}
+                                    className={`tone-pill-btn ${language === l.value ? 'active' : ''}`}
+                                    onClick={() => setLanguage(l.value)}
+                                >
+                                    <span className="tone-pill-icon">{l.icon}</span>
+                                    {l.label}
+                                </button>
+                            ))}
                         </div>
-                    ) : (
-                        <div className="flex flex-col gap-6">
-                            {isGenerating ? (
-                                // Skeleton loader
-                                <div className="space-y-6">
-                                    {[1, 2, 3].map((i) => (
-                                        <div key={i} className="bg-[var(--bg-elevated)]/50 border border-[var(--border)] rounded-2xl p-6 animate-pulse min-h-[200px]">
-                                            <div className="flex justify-between mb-4">
-                                                <div className="w-24 h-5 bg-[var(--bg-surface)] rounded-full"></div>
-                                                <div className="w-16 h-4 bg-[var(--bg-surface)] rounded"></div>
-                                            </div>
-                                            <div className="w-1/3 h-6 bg-[var(--bg-surface)] rounded mb-4 mt-2"></div>
-                                            <div className="w-full h-4 bg-[var(--bg-surface)] rounded mb-2"></div>
-                                            <div className="w-full h-4 bg-[var(--bg-surface)] rounded mb-2"></div>
-                                            <div className="w-4/5 h-4 bg-[var(--bg-surface)] rounded"></div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                replies.map((draft, idx) => (
-                                    <ReplyCard key={draft.id} draft={draft} index={idx} />
-                                ))
-                            )}
+                    </div>
+
+                    {/* Tone selector */}
+                    <div className="tone-section">
+                        <div className="tone-section-label">Tone</div>
+                        <div className="tone-pills">
+                            {TONES.map(t => (
+                                <button
+                                    key={t.value}
+                                    className={`tone-pill-btn ${tone === t.value ? 'active' : ''}`}
+                                    onClick={() => setTone(t.value)}
+                                >
+                                    <span className="tone-pill-icon">{t.icon}</span>
+                                    {t.label}
+                                </button>
+                            ))}
+                        </div>
+                        {tone === 'custom' && (
+                            <input
+                                className="custom-tone-field"
+                                type="text"
+                                value={customInstruction}
+                                onChange={e => setCustomInstruction(e.target.value.slice(0, 200))}
+                                placeholder="e.g. enthusiastic but professional, like a Lagos startup founder"
+                                maxLength={200}
+                            />
+                        )}
+                    </div>
+
+                    {/* Context toggle */}
+                    <div className="context-toggle-row">
+                        <button className="context-toggle-btn" onClick={() => setShowContext(v => !v)}>
+                            {showContext ? '− Hide context' : '+ Add context (optional)'}
+                        </button>
+                    </div>
+                    {showContext && (
+                        <textarea
+                            className="context-field"
+                            value={context}
+                            onChange={e => setContext(e.target.value.slice(0, 300))}
+                            placeholder="e.g. I'm a freelancer chasing an overdue payment. I want to be firm but not burn the bridge."
+                            rows={2}
+                        />
+                    )}
+
+                    {/* Generate button */}
+                    <button
+                        className={`generate-btn ${isGenerating ? 'generating' : ''}`}
+                        onClick={handleGenerate}
+                        disabled={!emailContent.trim() || isGenerating}
+                    >
+                        {isGenerating ? (
+                            <span className="generating-inner">
+                                <span className="generating-dot" />
+                                <span className="generating-dot" style={{ animationDelay: '0.15s' }} />
+                                <span className="generating-dot" style={{ animationDelay: '0.3s' }} />
+                                <span className="generating-step-text">{GENERATING_STEPS[generatingStep]}</span>
+                            </span>
+                        ) : (
+                            <>
+                                Generate 3 replies
+                                {credits && (
+                                    <span className="generate-btn-sub">
+                                        {credits.free > 0
+                                            ? `${credits.free} free ${credits.free === 1 ? 'reply' : 'replies'} left`
+                                            : credits.paid > 0
+                                                ? `${credits.paid} credits`
+                                                : '0 credits — upgrade'}
+                                    </span>
+                                )}
+                            </>
+                        )}
+                    </button>
+
+                    {/* Ad Space */}
+                    <ReplyAIAd />
+
+                    {/* Insufficient credits */}
+                    {error?.includes('INSUFFICIENT') && (
+                        <div className="credits-error-card">
+                            <p>You've used all your free replies for this month.</p>
+                            <a href="/pricing" className="credits-error-link">Get more credits →</a>
                         </div>
                     )}
                 </div>
-            </div>
-        </PageWrapper>
+
+                {/* Right panel — output */}
+                <div className="app-output-panel" ref={outputRef}>
+                    {isGenerating && (
+                        <div className="output-generating">
+                            <div className="output-generating-label">{GENERATING_STEPS[generatingStep]}</div>
+                            {[0, 1, 2].map(i => (
+                                <ReplyCardSkeleton key={i} />
+                            ))}
+                        </div>
+                    )}
+
+                    {!isGenerating && replies.length === 0 && !error && (
+                        <div className="empty-state">
+                            <div className="empty-state-icon">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.3">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                    <polyline points="22,6 12,13 2,6" />
+                                </svg>
+                            </div>
+                            <h3 className="empty-state-title">Your 3 drafts will appear here</h3>
+                            <p className="empty-state-sub">Paste an email on the left, pick a tone, and hit generate. Takes about 3 seconds.</p>
+                        </div>
+                    )}
+
+                    {!isGenerating && replies.length > 0 && (
+                        <div className="replies-list">
+                            <div className="replies-header">
+                                <span className="replies-count">3 drafts generated</span>
+                                <button className="replies-regenerate" onClick={handleGenerate}>Regenerate</button>
+                            </div>
+                            {replies.map((draft, i) => (
+                                <div
+                                    key={draft.id}
+                                    className="reply-card"
+                                    style={{ animationDelay: `${i * 80}ms` }}
+                                >
+                                    <div className="reply-card-header">
+                                        <div className="reply-card-meta">
+                                            <span className="reply-label">{draft.label}</span>
+                                            <span className="word-count-badge">{draft.wordCount}w</span>
+                                        </div>
+                                        <div className="reply-card-actions">
+                                            <button
+                                                className={`save-template-btn ${savedIds.has(draft.id) ? 'saved' : ''}`}
+                                                onClick={() => handleSaveTemplate(draft)}
+                                                disabled={savedIds.has(draft.id)}
+                                            >
+                                                {savedIds.has(draft.id) ? 'Saved' : 'Save as Template'}
+                                            </button>
+                                            <button
+                                                className={`copy-btn ${copiedId === draft.id ? 'copied' : ''}`}
+                                                onClick={() => handleCopy(draft.id, draft.body)}
+                                            >
+                                                {copiedId === draft.id ? '✓ Copied' : 'Copy'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="reply-subject">
+                                        <span className="subject-chip">{draft.subject}</span>
+                                    </div>
+                                    <div className="reply-body">{draft.body}</div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </main>
+        </div>
     );
 }

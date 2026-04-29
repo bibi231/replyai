@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ToneType, ReplyDraft } from '../types';
+import { ToneType, ReplyDraft, OutputLanguage } from '../types';
 import { api } from '../lib/api';
 import { useAuthStore } from '../store/authStore';
 
@@ -8,11 +8,11 @@ export function useReply() {
     const [isGenerating, setIsGenerating] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    async function generate(emailContent: string, tone: ToneType, context?: string) {
+    async function generate(emailContent: string, tone: ToneType, context?: string, outputLanguage: OutputLanguage = 'en') {
         setIsGenerating(true);
         setError(null);
         try {
-            const res = await api.post('/api/reply/generate', { emailContent, tone, context });
+            const res = await api.post('/api/reply/generate', { emailContent, tone, context, outputLanguage });
             setReplies(res.data.replies);
 
             const cr = res.data.creditsRemaining;

@@ -1,6 +1,5 @@
 import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-kit/utils'; // Wait, standard drizzle for neon is different
-import * as schema from './schema';
+import * as schema from './schema.js';
 import { drizzle as nodeDrizzle } from 'drizzle-orm/neon-http';
 
 if (!process.env.DATABASE_URL) {

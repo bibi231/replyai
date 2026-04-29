@@ -27,6 +27,7 @@
     const customToneGroup = $('#customToneGroup');
     const customToneInput = $('#customToneInput');
     const contextInput = $('#contextInput');
+    const languageSelect = $('#languageSelect');
     const btnGenerate = $('#btnGenerate');
     const errorMsg = $('#errorMsg');
     const spinner = $('#spinner');
@@ -233,7 +234,8 @@
                 type: 'GENERATE_REPLIES',
                 emailContent,
                 tone,
-                context
+                context,
+                outputLanguage: languageSelect.value
             });
 
             if (result.error) {

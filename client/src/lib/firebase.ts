@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,3 +13,28 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+
+export const getIdToken = async () => {
+    const user = auth.currentUser;
+    if (user) {
+        return await user.getIdToken();
+    }
+    return null;
+};
+
+export const logOut = async () => {
+    await auth.signOut();
+};
+
+export const signInWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    return await signInWithPopup(auth, provider);
+};
+
+export const signInWithEmail = async (email: string, password: string) => {
+    return await signInWithEmailAndPassword(auth, email, password);
+};
+
+export const signUpWithEmail = async (email: string, password: string) => {
+    return await createUserWithEmailAndPassword(auth, email, password);
+};

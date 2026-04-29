@@ -1,4 +1,13 @@
 export type ToneType = 'professional' | 'friendly' | 'firm' | 'apologetic' | 'custom';
+export type OutputLanguage = 'en' | 'pidgin' | 'yoruba' | 'hausa' | 'fr';
+
+export const OUTPUT_LANGUAGES: Record<OutputLanguage, { label: string; icon: string }> = {
+    en: { label: 'English', icon: '🇬🇧' },
+    pidgin: { label: 'Pidgin', icon: '🇳🇬' },
+    yoruba: { label: 'Yoruba', icon: '🇳🇬' },
+    hausa: { label: 'Hausa', icon: '🇳🇬' },
+    fr: { label: 'French', icon: '🇫🇷' },
+};
 
 export interface ReplyDraft {
     id: string;
@@ -6,6 +15,15 @@ export interface ReplyDraft {
     subject: string;
     body: string;
     wordCount: number;
+}
+
+export interface ReplyTemplate {
+    id: string;
+    title: string;
+    body: string;
+    tone?: string;
+    category?: string;
+    createdAt: string;
 }
 
 export type PackType = 'starter' | 'pro' | 'power';

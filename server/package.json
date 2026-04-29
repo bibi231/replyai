@@ -10,6 +10,7 @@
     "express": "^4.21.0",
     "express-rate-limit": "^7.4.0",
     "firebase-admin": "^13.0.0",
+    "groq-sdk": "^1.1.1",
     "helmet": "^8.0.0",
     "uuid": "^11.0.0"
   },
