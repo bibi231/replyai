@@ -1,0 +1,258 @@
+/* ==========================================================================
+   SETTINGS V2 — PREUMIUM UI
+   ========================================================================== */
+.settings-container-v2 {
+    display: flex;
+    gap: 0;
+    background: #0d1117;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    overflow: hidden;
+    min-height: 600px;
+    margin-top: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.settings-sidebar {
+    width: 280px;
+    background: #090c10;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 32px 0;
+}
+
+.settings-tab-btn {
+    width: 100%;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: left;
+    position: relative;
+}
+
+.settings-tab-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.settings-tab-btn.active {
+    color: #00f2fe;
+    background: rgba(0, 242, 254, 0.03);
+}
+
+.settings-tab-btn.active::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: 15%;
+    height: 70%;
+    width: 3px;
+    background: #00f2fe;
+    border-radius: 4px 0 0 4px;
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+}
+
+.settings-content-panel {
+    flex: 1;
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    background: #0d1117;
+}
+
+.section-title {
+    font-family: "Syne", sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: #fff;
+}
+
+.section-desc {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 40px;
+}
+
+.control-group {
+    margin-bottom: 32px;
+}
+
+.control-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.control-input, .control-select {
+    width: 100%;
+    padding: 14px 18px;
+    background: #06080a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 15px;
+    transition: all 0.2s;
+}
+
+.control-input:focus, .control-select:focus {
+    border-color: #00f2fe;
+    background: rgba(0, 242, 254, 0.02);
+    box-shadow: 0 0 0 4px rgba(0, 242, 254, 0.05);
+    outline: none;
+}
+
+.option-card {
+    padding: 18px;
+    background: #06080a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.option-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.option-card.active {
+    background: rgba(0, 242, 254, 0.05);
+    border-color: #00f2fe;
+    color: #00f2fe;
+}
+
+.toggle-switch {
+    width: 52px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 30px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.toggle-switch.on { 
+    background: #00f2fe;
+}
+
+.toggle-knob {
+    width: 22px;
+    height: 22px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch.on .toggle-knob { 
+    transform: translateX(24px); 
+}
+
+.credits-summary-card {
+    background: #06080a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+}
+
+.credits-summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: #00f2fe;
+}
+
+.balance-val {
+    display: block;
+    font-size: 36px;
+    font-weight: 800;
+    font-family: "Syne", sans-serif;
+    color: #fff;
+}
+
+.balance-label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.save-settings-btn {
+    margin-left: auto;
+    background: #00f2fe;
+    color: #000;
+    font-weight: 800;
+    padding: 16px 40px;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    font-family: "Syne", sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 13px;
+}
+
+.save-settings-btn:hover:not(:disabled) {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 242, 254, 0.3);
+    background: #fff;
+}
+
+.save-settings-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.settings-footer {
+    margin-top: auto;
+    padding-top: 48px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.anim-fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+    .settings-container-v2 { flex-direction: column; min-height: auto; }
+    .settings-sidebar { width: 100%; display: flex; padding: 0; overflow-x: auto; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .settings-tab-btn { padding: 20px 24px; white-space: nowrap; border-bottom: 2px solid transparent; }
+    .settings-tab-btn.active::after { display: none; }
+    .settings-tab-btn.active { border-bottom-color: #00f2fe; }
+    .settings-content-panel { padding: 32px 24px; }
+}
