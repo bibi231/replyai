@@ -51,11 +51,27 @@ export function AppPage() {
     const [customInstruction, setCustomInstruction] = useState('');
     const [context, setContext] = useState('');
     const [showContext, setShowContext] = useState(false);
+    const [showTips, setShowTips] = useState(true);
     const [generatingStep, setGeneratingStep] = useState(0);
     const [copiedId, setCopiedId] = useState<string | null>(null);
     const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
     const stepIntervalRef = useRef<number | undefined>(undefined);
     const outputRef = useRef<HTMLDivElement>(null);
+
+    // Load settings defaults
+    useEffect(() => {
+        async function fetchSettings() {
+            try {
+                const res = await api.get('/api/user/settings');
+                if (res.data.defaultTone) setTone(res.data.defaultTone);
+                if (res.data.defaultLanguage) setLanguage(res.data.defaultLanguage);
+                if (typeof res.data.showTips === 'boolean') setShowTips(res.data.showTips);
+            } catch (err) {
+                console.error("Failed to load settings", err);
+            }
+        }
+        fetchSettings();
+    }, []);
 
     // Cycle through generating step text
     useEffect(() => {
@@ -76,7 +92,6 @@ export function AppPage() {
     async function handleGenerate() {
         if (!emailContent.trim() || isGenerating) return;
         clearReplies();
-        // useReply.generate takes (emailContent, tone, context?, language?)
         const ctx = tone === 'custom' ? customInstruction : (context || undefined);
         await generate(emailContent, tone, ctx, language);
         refreshCredits();
@@ -110,7 +125,6 @@ export function AppPage() {
         <div className="app-layout">
             <Navbar />
             <main className="app-main">
-                {/* Left panel */}
                 <div className="app-input-panel">
                     <div className="input-panel-header">
                         <h2 className="input-panel-title">Paste the email you received</h2>
@@ -133,7 +147,12 @@ export function AppPage() {
                         </button>
                     )}
 
-                    {/* Language Selector */}
+                    {showTips && !emailContent && (
+                        <div className="generator-tip">
+                            <strong>Tip:</strong> Pick a tone like "Firm" for debt recovery or "Friendly" for networking.
+                        </div>
+                    )}
+
                     <div className="tone-section">
                         <div className="tone-section-label">Reply Language</div>
                         <div className="tone-pills">
@@ -150,7 +169,6 @@ export function AppPage() {
                         </div>
                     </div>
 
-                    {/* Tone selector */}
                     <div className="tone-section">
                         <div className="tone-section-label">Tone</div>
                         <div className="tone-pills">
@@ -177,7 +195,6 @@ export function AppPage() {
                         )}
                     </div>
 
-                    {/* Context toggle */}
                     <div className="context-toggle-row">
                         <button className="context-toggle-btn" onClick={() => setShowContext(v => !v)}>
                             {showContext ? '− Hide context' : '+ Add context (optional)'}
@@ -193,7 +210,6 @@ export function AppPage() {
                         />
                     )}
 
-                    {/* Generate button */}
                     <button
                         className={`generate-btn ${isGenerating ? 'generating' : ''}`}
                         onClick={handleGenerate}
@@ -222,10 +238,8 @@ export function AppPage() {
                         )}
                     </button>
 
-                    {/* Ad Space */}
                     <ReplyAIAd />
 
-                    {/* Insufficient credits */}
                     {error?.includes('INSUFFICIENT') && (
                         <div className="credits-error-card">
                             <p>You've used all your free replies for this month.</p>
@@ -234,7 +248,6 @@ export function AppPage() {
                     )}
                 </div>
 
-                {/* Right panel — output */}
                 <div className="app-output-panel" ref={outputRef}>
                     {isGenerating && (
                         <div className="output-generating">

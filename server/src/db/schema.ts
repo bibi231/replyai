@@ -9,6 +9,9 @@ export const users = pgTable('users', {
     freeCreditsResetAt: timestamp('free_credits_reset_at'),
     paidCredits: integer('paid_credits').default(0),
     totalGenerations: integer('total_generations').default(0),
+    defaultTone: varchar('default_tone', { length: 50 }).default('professional'),
+    defaultLanguage: varchar('default_language', { length: 20 }).default('en'),
+    showTips: integer('show_tips').default(1), 
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at').defaultNow(),
 });
@@ -39,6 +42,8 @@ export const payments = pgTable('payments', {
     userId: varchar('user_id', { length: 128 }).references(() => users.id),
     paystackRef: varchar('paystack_ref', { length: 255 }).unique(),
     amount: integer('amount'),
+    currency: varchar('currency', { length: 10 }).default('NGN'),
+    gateway: varchar('gateway', { length: 20 }).default('paystack'),
     credits: integer('credits'),
     status: varchar('status', { length: 20 }).default('pending'),
     pack: varchar('pack', { length: 50 }),

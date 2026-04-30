@@ -7,6 +7,7 @@ import creditsRoutes from './routes/credits.js';
 import authRoutes from './routes/auth.js';
 import webhookRoutes from './routes/webhook.js';
 import templatesRoutes from './routes/templates.js';
+import userRoutes from './routes/user.js';
 import { AIAllModelsFailedError, AIParseError } from './services/aiService.js';
 import { logger } from './utils/logger.js';
 
@@ -43,6 +44,7 @@ app.use('/api/reply', replyRoutes);
 app.use('/api/credits', creditsRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/templates', templatesRoutes);
+app.use('/api/user', userRoutes);
 
 // Health check
 app.get('/health', (req: Request, res: Response) => {

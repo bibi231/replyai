@@ -42,7 +42,9 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         if (!displayName.trim()) {
           throw new Error('Please enter a display name');
         }
-        await signUpWithEmail(email, password);
+        const userCredential = await signUpWithEmail(email, password);
+        const { updateProfile } = await import('firebase/auth');
+        await updateProfile(userCredential.user, { displayName });
       }
       if (onClose) onClose();
     } catch (err: any) {

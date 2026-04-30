@@ -78,6 +78,8 @@ body {
   min-height: 100vh;
 }
 #root { min-height: 100vh; display: flex; flex-direction: column; }
+.app-container { display: flex; flex-direction: column; min-height: 100vh; }
+.layout-wrapper { flex: 1; }
 
 .font-display { font-family: 'Syne', sans-serif; }
 
@@ -847,3 +849,55 @@ body {
     font-weight: 700;
     color: var(--primary);
 }
+
+/* Pricing Enhancements */
+.currency-toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 32px 0;
+}
+
+.currency-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: color 0.3s;
+}
+
+.currency-label.active {
+    color: var(--accent);
+}
+
+.currency-toggle {
+    width: 60px;
+    height: 32px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 32px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.currency-toggle:hover {
+    border-color: var(--accent);
+}
+
+.currency-toggle-knob {
+    width: 24px;
+    height: 24px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px var(--accent);
+}
+
+.currency-toggle-knob.right {
+    transform: translateX(28px);
+}
+
