@@ -2,28 +2,66 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0d14" />
     <title>ReplyAI — AI Email Reply Generator</title>
     <meta name="description" content="Paste any email, pick a tone, get 3 AI-written reply drafts in seconds. Built for Nigerian professionals." />
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-    
-    {/* Payment Gateways */}
-    <script src="https://js.paystack.co/v1/inline.js"></script>
-    <script src="https://checkout.flutterwave.com/v3.js"></script>
 
-    {/* Google AdSense Placeholder - Replace with your client ID */}
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+    <!-- OpenGraph / social -->
+    <meta property="og:title" content="ReplyAI — AI Email Reply Generator" />
+    <meta property="og:description" content="3 professional reply drafts in seconds. English, Pidgin, Yoruba, Hausa & French." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://replyai.com.ng" />
 
-    {/* PropellerAds Placeholder - Replace with your zone ID */}
-    <script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://iclickcdn.com/tag.min.js',5555555,document.body||document.documentElement)</script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.png" />
 
+    <link rel="preconnect" href="https://api.replyai.com.ng" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+
+    <!-- Payment gateways (deferred so they don't block first paint) -->
+    <script defer src="https://js.paystack.co/v1/inline.js"></script>
+    <script defer src="https://checkout.flutterwave.com/v3.js"></script>
+
+    <style>
+      /* Inline boot shell so the page is never blank */
+      html, body { background:#0b0d14; color:#e2e8f0; margin:0; padding:0; min-height:100%;
+                   font-family:'DM Sans', system-ui, -apple-system, sans-serif; }
+      #root { min-height:100vh; }
+      .rai-boot {
+        position:fixed; inset:0;
+        display:flex; align-items:center; justify-content:center; flex-direction:column; gap:18px;
+        background: radial-gradient(circle at 50% 30%, rgba(99,102,241,.10) 0%, transparent 60%), #0b0d14;
+        z-index: 9999;
+      }
+      .rai-boot-mark {
+        width:60px; height:60px; border-radius:16px;
+        background:linear-gradient(135deg,#6366f1,#a855f7);
+        box-shadow:0 12px 36px rgba(99,102,241,.4);
+        display:grid; place-items:center; color:#fff;
+        font-family:'Syne', sans-serif; font-weight:800; font-size:28px;
+        animation: rai-boot-float 2.5s ease-in-out infinite;
+      }
+      .rai-boot-text { font-family:'Syne', sans-serif; font-weight:800; font-size:22px; }
+      .rai-boot-sub  { font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:#8b91a3;
+                       display:flex; align-items:center; gap:8px; }
+      .rai-boot-spin { width:14px; height:14px; border-radius:50%;
+                       border:2px solid rgba(99,102,241,.2); border-top-color:#a855f7;
+                       animation: rai-boot-spin .9s linear infinite; }
+      @keyframes rai-boot-spin  { to { transform:rotate(360deg); } }
+      @keyframes rai-boot-float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-6px); } }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div id="rai-boot" class="rai-boot" aria-busy="true">
+        <div class="rai-boot-mark">R</div>
+        <div class="rai-boot-text">ReplyAI</div>
+        <div class="rai-boot-sub"><span class="rai-boot-spin"></span> Loading inbox engine</div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

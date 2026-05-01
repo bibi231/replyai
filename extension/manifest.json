@@ -44,7 +44,9 @@
     ],
     "host_permissions": [
         "http://localhost:4000/*",
-        "https://replyai-api.onrender.com/*"
+        "https://replyai-api.onrender.com/*",
+        "https://api.replyai.com.ng/*",
+        "https://replyai.com.ng/*"
     ],
     "content_security_policy": {
         "extension_pages": "script-src 'self'; object-src 'self'"

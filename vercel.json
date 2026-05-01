@@ -1,0 +1,10 @@
+{
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "framework": "vite",
+    "installCommand": "cd client && npm install --include=dev",
+    "buildCommand": "cd client && npx tsc -p . --noEmit && npx vite build",
+    "outputDirectory": "client/dist",
+    "rewrites": [
+        { "source": "/(.*)", "destination": "/" }
+    ]
+}

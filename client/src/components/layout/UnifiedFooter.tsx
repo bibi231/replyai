@@ -1,118 +1,131 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+const NETWORK_PRODUCTS = [
+  { name: 'HarvestAI',   desc: 'Premium Web Data & Lead Generation', link: 'https://harvestai.com.ng', icon: '🌾' },
+  { name: 'Star Ranker', desc: 'Entertainment Analytics & PR',       link: '#', icon: '⭐' },
+  { name: 'SafeNet',     desc: 'Digital Security & Fraud Protection', link: '#', icon: '🛡️' },
+  { name: 'Sonic Phil.', desc: 'Music, Philosophy & Art',            link: '#', icon: '🎵' },
+];
+
+const SOCIAL_LINKS = [
+  { label: 'Twitter / X', href: 'https://twitter.com', svg: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' },
+  { label: 'LinkedIn',    href: 'https://linkedin.com', svg: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' },
+  { label: 'Instagram',   href: 'https://instagram.com', svg: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z' },
+];
+
 export function UnifiedFooter() {
-    const [isNetworkOpen, setIsNetworkOpen] = useState(false);
+  const [isNetworkOpen, setIsNetworkOpen] = useState(false);
+  const year = new Date().getFullYear();
 
-    const networkProducts = [
-        { name: 'HarvestAI', desc: 'Premium Web Data & Scraping', link: 'https://harvestai-new.vercel.app', icon: '🌾' },
-        { name: 'Star Ranker', desc: 'Entertainment Analytics & PR', link: '#', icon: '⭐' },
-        { name: 'SafeNet', desc: 'Digital Security & Fraud Protection', link: '#', icon: '🛡️' },
-        { name: 'Sonic Phil.', desc: 'Music, Philosophy & Art', link: '#', icon: '🎵' },
-    ];
-
-    return (
-        <footer className="unified-footer">
-            {/* External Ad Slot (PropellerAds/AdSense) */}
-            <div className="external-ad-slot top-footer-ad">
-                <div className="ad-placeholder">
-                    <span>Sponsored Content</span>
-                    <p>Space for Google AdSense / PropellerAds Banner (728x90)</p>
-                </div>
+  return (
+    <footer className="rai-footer">
+      <div className="rai-footer-inner">
+        <div className="rai-footer-grid">
+          {/* Brand column */}
+          <div className="rai-footer-col rai-footer-brand">
+            <Link to="/" className="rai-footer-logo">
+              <span className="rai-footer-logo-mark">R</span>
+              <span className="rai-footer-logo-text">ReplyAI</span>
+            </Link>
+            <p className="rai-footer-tag">
+              The intelligent layer for your professional inbox. Built in
+              Abuja, refined for the world.
+            </p>
+            <div className="rai-footer-socials">
+              {SOCIAL_LINKS.map(s => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  className="rai-footer-social"
+                  aria-label={s.label}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                    <path d={s.svg} />
+                  </svg>
+                </a>
+              ))}
             </div>
+          </div>
 
-            <div className="footer-main">
-                <div className="footer-grid">
-                    <div className="footer-col brand">
-                        <div className="footer-logo-v2">ReplyAI</div>
-                        <p className="footer-about">
-                            The intelligent layer for your professional inbox. 
-                            Built in Abuja, refined for the world by <strong>TrueWeb Solutions</strong>.
-                        </p>
-                        <div className="social-links-v2">
-                            <a href="#" className="social-icon">𝕏</a>
-                            <a href="#" className="social-icon">In</a>
-                            <a href="#" className="social-icon">IG</a>
-                        </div>
-                    </div>
+          {/* Product */}
+          <div className="rai-footer-col">
+            <h4 className="rai-footer-h">Product</h4>
+            <ul className="rai-footer-links">
+              <li><Link to="/app">Reply Generator</Link></li>
+              <li><Link to="/dashboard">Dashboard</Link></li>
+              <li><Link to="/pricing">Pricing</Link></li>
+              <li><Link to="/settings">Settings</Link></li>
+            </ul>
+          </div>
 
-                    <div className="footer-col">
-                        <h4>Platform</h4>
-                        <Link to="/app">AI Generator</Link>
-                        <Link to="/dashboard">Reply History</Link>
-                        <Link to="/pricing">Pricing Plans</Link>
-                        <Link to="/settings">Account Settings</Link>
-                    </div>
+          {/* Legal */}
+          <div className="rai-footer-col">
+            <h4 className="rai-footer-h">Legal</h4>
+            <ul className="rai-footer-links">
+              <li><Link to="/privacy">Privacy</Link></li>
+              <li><Link to="/terms">Terms</Link></li>
+              <li><Link to="/refund">Refund Policy</Link></li>
+              <li><Link to="/cookies">Cookies</Link></li>
+            </ul>
+          </div>
 
-                    <div className="footer-col">
-                        <h4>Resources</h4>
-                        <Link to="/privacy">Privacy Policy</Link>
-                        <Link to="/terms">Terms of Service</Link>
-                        <Link to="/refund">Refund Policy</Link>
-                        <Link to="/cookies">Cookie Settings</Link>
-                    </div>
+          {/* Support */}
+          <div className="rai-footer-col">
+            <h4 className="rai-footer-h">Support</h4>
+            <ul className="rai-footer-links">
+              <li><a href="mailto:support@replyai.com.ng">Help</a></li>
+              <li><a href="mailto:hello@replyai.com.ng">Contact</a></li>
+              <li>
+                <button
+                  type="button"
+                  className="rai-footer-linklike"
+                  onClick={() => setIsNetworkOpen(o => !o)}
+                  aria-expanded={isNetworkOpen}
+                >
+                  TrueWeb Network
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+                       style={{ marginLeft: 6, transform: isNetworkOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform .25s' }}>
+                    <path d="M6 9l6 6 6-6"/>
+                  </svg>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
 
-                    <div className="footer-col">
-                        <h4>Support</h4>
-                        <a href="mailto:support@trueweb.solutions">Help Center</a>
-                        <a href="mailto:support@trueweb.solutions">Contact Sales</a>
-                        <div className="trust-badge">
-                            <span className="secure-icon">🛡️</span>
-                            Verified by TrueWeb Network
-                        </div>
-                    </div>
-                </div>
-            </div>
+        {/* Network panel — slides open */}
+        <div className={`rai-footer-network ${isNetworkOpen ? 'is-open' : ''}`}>
+          <div className="rai-footer-network-grid">
+            {NETWORK_PRODUCTS.map(p => (
+              <a
+                key={p.name}
+                href={p.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rai-footer-network-card"
+              >
+                <span className="rai-footer-network-icon">{p.icon}</span>
+                <span className="rai-footer-network-meta">
+                  <span className="rai-footer-network-name">{p.name}</span>
+                  <span className="rai-footer-network-desc">{p.desc}</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
 
-            {/* Network Toggle Area */}
-            <div className="footer-bottom-bar">
-                <div className="footer-bottom-inner">
-                    <div 
-                        className={`network-trigger-v2 ${isNetworkOpen ? 'is-active' : ''}`}
-                        onClick={() => setIsNetworkOpen(!isNetworkOpen)}
-                    >
-                        <span className="flag-icon">🇳🇬</span>
-                        <span className="trigger-text">A TrueWeb Solutions Product</span>
-                        <svg 
-                            className="chevron-icon" 
-                            width="14" 
-                            height="14" 
-                            viewBox="0 0 24 24" 
-                            fill="none" 
-                            stroke="currentColor" 
-                            strokeWidth="2.5"
-                            style={{ transform: isNetworkOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}
-                        >
-                            <path d="M18 15l-6-6-6 6" />
-                        </svg>
-                    </div>
-
-                    <div className="footer-meta-text">
-                        © 2026 TrueWeb Solutions. All rights reserved.
-                    </div>
-                </div>
-
-                {/* Interactive Network Slider */}
-                <div className={`network-slider-overlay ${isNetworkOpen ? 'is-open' : ''}`}>
-                    <div className="network-slider-content">
-                        <div className="slider-header">
-                            <h3>TrueWeb Ecosystem</h3>
-                            <button onClick={() => setIsNetworkOpen(false)} className="close-slider">✕</button>
-                        </div>
-                        <div className="product-grid-v2">
-                            {networkProducts.map(p => (
-                                <a key={p.name} href={p.link} className="product-card-v2" target="_blank" rel="noopener noreferrer">
-                                    <span className="p-icon">{p.icon}</span>
-                                    <div className="p-info">
-                                        <span className="p-name">{p.name}</span>
-                                        <span className="p-desc">{p.desc}</span>
-                                    </div>
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    );
+        <div className="rai-footer-bottom">
+          <span className="rai-footer-meta">
+            © {year} <strong>TrueWeb Solutions</strong>. Made with care in Nigeria 🇳🇬.
+          </span>
+          <span className="rai-footer-status">
+            <span className="rai-footer-dot" /> All systems operational
+          </span>
+        </div>
+      </div>
+    </footer>
+  );
 }

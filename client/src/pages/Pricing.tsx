@@ -4,20 +4,18 @@ import { PaystackButton } from '../components/billing/PaystackButton';
 import { FlutterwaveButton } from '../components/billing/FlutterwaveButton';
 import { useCredits } from '../hooks/useCredits';
 import { useAuthStore } from '../store/authStore';
-import { CREDIT_PACKS } from '../types';
+import { CREDIT_PACKS, detectCurrency } from '../types';
 
 export function Pricing() {
   const { credits } = useCredits();
   const user = useAuthStore(s => s.user);
-  const [currency, setCurrency] = useState<'NGN' | 'USD'>('NGN');
+  // Auto-detect: African timezone -> NGN, anywhere else -> USD. User can override.
+  const [currency, setCurrency] = useState<'NGN' | 'USD'>(() => detectCurrency());
 
-  // Simple geo-proxy detection
+  // Persist explicit user toggle so it survives reload
   useEffect(() => {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if (!tz.includes('Africa')) {
-      setCurrency('USD');
-    }
-  }, []);
+    try { window.localStorage.setItem('replyai:currency', currency); } catch {}
+  }, [currency]);
 
   return (
     <div className="pricing-page">
@@ -26,8 +24,8 @@ export function Pricing() {
         <div className="pricing-header">
           <div className="section-label">Pricing</div>
           <h1 className="pricing-title">Start free. Pay as you need.</h1>
-          <p className="pricing-sub">Everyone gets 5 free reply generations every month. Buy credits when you need more — they never expire.</p>
-          
+          <p className="pricing-sub">Everyone gets 5 free reply generations every month. Buy credits when you need more &mdash; they never expire.</p>
+
           <div className="currency-toggle-container">
             <span className={`currency-label ${currency === 'NGN' ? 'active' : ''}`}>NGN (Local)</span>
             <button className="currency-toggle" onClick={() => setCurrency(c => c === 'NGN' ? 'USD' : 'NGN')}>

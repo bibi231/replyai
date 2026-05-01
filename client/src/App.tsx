@@ -18,6 +18,7 @@ import { Settings } from './pages/Settings';
 
 import { CookieBanner } from './components/layout/CookieBanner';
 import { GlobalNetworkAd } from './components/ads/GlobalNetworkAd';
+import { NewsletterPopup } from './components/marketing/NewsletterPopup';
 
 export default function App() {
     useAuth();
@@ -61,6 +62,7 @@ export default function App() {
             <PricingModal />
             <ToastContainer />
             <CookieBanner />
+            <NewsletterPopup />
         </div>
     );
 }
