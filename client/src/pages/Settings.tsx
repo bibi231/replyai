@@ -18,12 +18,16 @@ export function Settings() {
     const [isSaving, setIsSaving] = useState(false);
     const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
+    // Load persisted settings from localStorage (not Firebase User, which doesn't store these)
     useEffect(() => {
         if (user) {
             setDisplayName(user.displayName || '');
-            setDefaultTone(user.defaultTone || 'professional');
-            setDefaultLanguage(user.defaultLanguage || 'en');
-            setShowTips(user.showTips !== false);
+            try {
+                const saved = JSON.parse(localStorage.getItem('replyai:prefs') || '{}');
+                if (saved.defaultTone) setDefaultTone(saved.defaultTone);
+                if (saved.defaultLanguage) setDefaultLanguage(saved.defaultLanguage);
+                if (typeof saved.showTips === 'boolean') setShowTips(saved.showTips);
+            } catch { /* ignore parse errors */ }
         }
     }, [user]);
 
@@ -31,13 +35,15 @@ export function Settings() {
         setIsSaving(true);
         setSaveStatus('idle');
         try {
-            const res = await api.put('/api/user/settings', {
+            // Persist preferences locally
+            localStorage.setItem('replyai:prefs', JSON.stringify({ defaultTone, defaultLanguage, showTips }));
+            // Update server-side settings (display name etc.)
+            await api.put('/api/user/settings', {
                 displayName,
                 defaultTone,
                 defaultLanguage,
                 showTips
             });
-            setUser(res.data);
             setSaveStatus('success');
             setTimeout(() => setSaveStatus('idle'), 3000);
         } catch (err) {

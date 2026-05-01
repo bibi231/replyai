@@ -20,7 +20,7 @@
     },
     "scripts": {
         "dev": "vite",
-        "build": "tsc -p . && vite build",
+        "build": "npx tsc -p . --noEmit && npx vite build",
         "preview": "vite preview"
     }
 }
