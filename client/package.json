@@ -21,6 +21,4 @@
     "scripts": {
         "dev": "vite",
         "build": "npx tsc -p . --noEmit && npx vite build",
-        "preview": "vite preview"
-    }
-}
+        "preview": "vite 

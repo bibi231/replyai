@@ -194,20 +194,4 @@ export function Settings() {
                         )}
 
                         <div className="settings-footer">
-                            {saveStatus === 'success' && <span className="text-green-400 text-sm mr-4">✓ Saved successfully</span>}
-                            {saveStatus === 'error' && <span className="text-red-400 text-sm mr-4">Transaction failed.</span>}
-                            <button
-                                className={`save-settings-btn ${isSaving ? 'loading' : ''}`}
-                                onClick={handleSave}
-                                disabled={isSaving}
-                            >
-                                {isSaving ? 'Saving...' : 'Update Settings'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </main>
-            <UnifiedFooter />
-        </div>
-    );
-}
+                            {saveStatus === 'success' && <span className="tex
