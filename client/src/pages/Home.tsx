@@ -299,7 +299,7 @@ export function Home() {
                  <div className="ad-box-content">
                     <h4>Dominate with <b>HarvestAI</b></h4>
                     <p>Unlock business intelligence today.</p>
-                    <a href="https://harvest.trueweb.tech" target="_blank" rel="noopener">Learn more →</a>
+                    <a href="https://harvestai.com.ng" target="_blank" rel="noopener">Learn more →</a>
                  </div>
                </div>
              )}

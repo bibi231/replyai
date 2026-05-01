@@ -5,10 +5,10 @@ export function UnifiedFooter() {
     const [isNetworkOpen, setIsNetworkOpen] = useState(false);
 
     const networkProducts = [
-        { name: 'HarvestAI', desc: 'AI Data Intelligence', link: 'https://harvestai-new.vercel.app', icon: '🌾' },
-        { name: 'Star Ranker', desc: 'AI SEO Optimization', link: '#', icon: '⭐' },
-        { name: 'SafeNet', desc: 'Cybersecurity Suite', link: '#', icon: '🛡️' },
-        { name: 'TrueWeb', desc: 'Parent Network', link: '#', icon: '🌐' },
+        { name: 'HarvestAI', desc: 'Premium Web Data & Scraping', link: 'https://harvestai.com.ng', icon: '🌾' },
+        { name: 'Star Ranker', desc: 'Entertainment Analytics & PR', link: '#', icon: '⭐' },
+        { name: 'SafeNet', desc: 'Digital Security & Fraud Protection', link: '#', icon: '🛡️' },
+        { name: 'Sonic Phil.', desc: 'Music, Philosophy & Art', link: '#', icon: '🎵' },
     ];
 
     return (
