@@ -1,220 +1,207 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar } from '../components/layout/Navbar';
 import { useAuthStore } from '../store/authStore';
-import { toast } from '../components/ui/Toast';
-import { Link } from 'react-router-dom';
+import { Navbar } from '../components/layout/Navbar';
+import { UnifiedFooter } from '../components/layout/UnifiedFooter';
 import { api } from '../lib/api';
+import type { ToneType, OutputLanguage } from '../types/index';
+import { OUTPUT_LANGUAGES } from '../types/index';
 
-type SettingsTab = 'account' | 'preferences' | 'billing' | 'api';
+type SettingsTab = 'account' | 'preferences' | 'billing';
 
 export function Settings() {
-    const user = useAuthStore(s => s.user);
-    const credits = useAuthStore(s => s.credits);
+    const { user, credits, setUser } = useAuthStore();
     const [activeTab, setActiveTab] = useState<SettingsTab>('account');
-    
-    // Form States
-    const [name, setName] = useState(user?.displayName || '');
-    const [language, setLanguage] = useState('en');
-    const [tone, setTone] = useState('professional');
+    const [displayName, setDisplayName] = useState(user?.displayName || '');
+    const [defaultTone, setDefaultTone] = useState<ToneType>('professional');
+    const [defaultLanguage, setDefaultLanguage] = useState<OutputLanguage>('en');
     const [showTips, setShowTips] = useState(true);
-    const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
     useEffect(() => {
-        async function fetchSettings() {
-            try {
-                const res = await api.get('/api/user/settings');
-                setLanguage(res.data.defaultLanguage);
-                setTone(res.data.defaultTone);
-                setShowTips(res.data.showTips);
-            } catch (err) {
-                console.error("Failed to fetch settings", err);
-            } finally {
-                setIsLoading(false);
-            }
+        if (user) {
+            setDisplayName(user.displayName || '');
+            setDefaultTone(user.defaultTone || 'professional');
+            setDefaultLanguage(user.defaultLanguage || 'en');
+            setShowTips(user.showTips !== false);
         }
-        if (user) fetchSettings();
     }, [user]);
 
-    const handleSave = async (e: React.FormEvent) => {
-        e.preventDefault();
+    async function handleSave() {
         setIsSaving(true);
+        setSaveStatus('idle');
         try {
-            await api.post('/api/user/settings', {
-                defaultLanguage: language,
-                defaultTone: tone,
+            const res = await api.put('/api/user/settings', {
+                displayName,
+                defaultTone,
+                defaultLanguage,
                 showTips
             });
-            toast('Settings updated successfully!', 'success');
+            setUser(res.data);
+            setSaveStatus('success');
+            setTimeout(() => setSaveStatus('idle'), 3000);
         } catch (err) {
-            toast('Failed to update settings', 'error');
+            setSaveStatus('error');
         } finally {
             setIsSaving(false);
         }
-    };
-
-    const tabs = [
-        { id: 'account', label: 'Account', icon: '👤' },
-        { id: 'preferences', label: 'Preferences', icon: '⚙️' },
-        { id: 'billing', label: 'Plans & Billing', icon: '💳' },
-        { id: 'api', label: 'API Keys', icon: '🔑' },
-    ];
-
-    if (isLoading && !user) {
-        return <div className="settings-page"><Navbar /><div className="settings-hero">Loading profile...</div></div>;
     }
 
-    return (
-        <div className="settings-page">
-            <Navbar />
-            
-            <div className="settings-hero">
-                <div className="settings-hero-inner">
-                    <div className="user-profile-header">
-                        <div className="user-avatar-large">
-                            {user?.photoURL ? <img src={user.photoURL} alt="" /> : (user?.displayName?.[0] || 'U')}
-                        </div>
-                        <div className="user-meta">
-                            <h1>{user?.displayName || 'User Profile'}</h1>
-                            <p>{user?.email}</p>
-                        </div>
-                    </div>
-                    <div className="user-stats-brief">
-                        <div className="stat-pill">
-                            <span className="stat-label">Credits Available</span>
-                            <span className="stat-value">{(credits?.free || 0) + (credits?.paid || 0)}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    const tabs: { id: SettingsTab; label: string; icon: string }[] = [
+        { id: 'account', label: 'My Account', icon: '👤' },
+        { id: 'preferences', label: 'AI Preferences', icon: '⚡' },
+        { id: 'billing', label: 'Credits & Billing', icon: '💳' },
+    ];
 
-            <main className="settings-layout">
-                <aside className="settings-sidebar">
-                    <nav className="settings-nav">
+    return (
+        <div className="layout-wrapper flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-1 max-w-5xl w-full mx-auto p-4 md:p-8">
+                <div className="mb-8">
+                    <h1 className="text-3xl font-extrabold font-syne mb-2">Workspace Settings</h1>
+                    <p className="text-muted text-sm">Manage your account, AI behavior, and credit balance.</p>
+                </div>
+
+                <div className="settings-container-v2">
+                    {/* Sidebar */}
+                    <div className="settings-sidebar">
                         {tabs.map(tab => (
-                            <button 
+                            <button
                                 key={tab.id}
-                                className={`settings-nav-item ${activeTab === tab.id ? 'active' : ''}`}
-                                onClick={() => setActiveTab(tab.id as SettingsTab)}
+                                className={`settings-tab-btn ${activeTab === tab.id ? 'active' : ''}`}
+                                onClick={() => setActiveTab(tab.id)}
                             >
-                                <span className="nav-icon">{tab.icon}</span>
-                                {tab.label}
+                                <span className="tab-icon">{tab.icon}</span>
+                                <span className="tab-label">{tab.label}</span>
                             </button>
                         ))}
-                    </nav>
-                </aside>
+                    </div>
 
-                <div className="settings-content">
-                    {activeTab === 'account' && (
-                        <div className="content-fade-in">
-                            <h2>Profile Information</h2>
-                            <form onSubmit={handleSave} className="settings-form-v2">
-                                <div className="input-group-v2">
-                                    <label>Display Name</label>
-                                    <input 
-                                        type="text" 
-                                        value={name} 
-                                        onChange={e => setName(e.target.value)}
-                                        placeholder="Enter your name"
-                                    />
-                                </div>
-                                <div className="input-group-v2">
-                                    <label>Email Address</label>
-                                    <input type="text" value={user?.email || ''} disabled className="is-disabled" />
-                                    <span className="field-hint">Email is managed via Google Account</span>
-                                </div>
-                                <button type="submit" className="settings-save-btn" disabled={isSaving}>
-                                    {isSaving ? 'Updating...' : 'Save Changes'}
-                                </button>
-                            </form>
-                        </div>
-                    )}
-
-                    {activeTab === 'preferences' && (
-                        <div className="content-fade-in">
-                            <h2>App Preferences</h2>
-                            <form onSubmit={handleSave} className="settings-form-v2">
-                                <div className="input-group-v2">
-                                    <label>Default Output Language</label>
-                                    <select value={language} onChange={e => setLanguage(e.target.value)}>
-                                        <option value="en">English (Global)</option>
-                                        <option value="en-ng">Nigerian English</option>
-                                        <option value="pcm">Nigerian Pidgin</option>
-                                        <option value="yo">Yoruba</option>
-                                        <option value="ha">Hausa</option>
-                                        <option value="ig">Igbo</option>
-                                    </select>
-                                </div>
-
-                                <div className="input-group-v2">
-                                    <label>Default Reply Tone</label>
-                                    <select value={tone} onChange={e => setTone(e.target.value)}>
-                                        <option value="professional">Professional</option>
-                                        <option value="friendly">Friendly</option>
-                                        <option value="urgent">Urgent</option>
-                                        <option value="concise">Concise</option>
-                                        <option value="creative">Creative</option>
-                                    </select>
-                                </div>
-
-                                <div className="toggle-group-v2">
-                                    <div className="toggle-info">
-                                        <h3>Show Helper Tips</h3>
-                                        <p>Display AI suggestions and usage hints in the generator</p>
+                    {/* Content Panel */}
+                    <div className="settings-content-panel">
+                        {activeTab === 'account' && (
+                            <div className="settings-section anim-fade-in">
+                                <h3 className="section-title">Public Profile</h3>
+                                <div className="space-y-6">
+                                    <div className="control-group">
+                                        <label className="control-label">Full Name</label>
+                                        <input
+                                            type="text"
+                                            className="control-input"
+                                            value={displayName}
+                                            onChange={e => setDisplayName(e.target.value)}
+                                            placeholder="Enter your name"
+                                        />
                                     </div>
-                                    <div 
-                                        className={`toggle-switch ${showTips ? 'active' : ''}`}
-                                        onClick={() => setShowTips(!showTips)}
-                                    ></div>
+                                    <div className="control-group opacity-60">
+                                        <label className="control-label">Email Address (Read-only)</label>
+                                        <input
+                                            type="email"
+                                            className="control-input bg-base"
+                                            value={user?.email || ''}
+                                            disabled
+                                        />
+                                    </div>
                                 </div>
-
-                                <button type="submit" className="settings-save-btn" disabled={isSaving}>
-                                    {isSaving ? 'Updating...' : 'Save Preferences'}
-                                </button>
-                            </form>
-                        </div>
-                    )}
-
-                    {activeTab === 'billing' && (
-                        <div className="content-fade-in">
-                            <h2>Plans & Billing</h2>
-                            <div className="billing-summary-card">
-                                <div className="plan-badge">{(credits?.paid || 0) > 0 ? 'Premium User' : 'Free Tier'}</div>
-                                <p>
-                                    {(credits?.paid || 0) > 0 
-                                        ? `You have ${credits?.paid} paid credits remaining.` 
-                                        : 'You are currently using free monthly credits. Upgrade for more.'}
-                                </p>
-                                <Link to="/pricing" className="upgrade-link">Buy more credits →</Link>
                             </div>
-                        </div>
-                    )}
+                        )}
 
-                    {activeTab === 'api' && (
-                        <div className="content-fade-in">
-                            <h2>Developer API</h2>
-                            <p className="field-hint" style={{marginBottom: 24}}>Enterprise integration keys for TrueWeb Solutions Network.</p>
-                            <div className="api-key-placeholder">
-                                <code>**************************</code>
-                                <button className="btn-ghost-sm" onClick={() => toast('API keys are restricted to Business accounts', 'info')}>Request Access</button>
-                            </div>
-                        </div>
-                    )}
+                        {activeTab === 'preferences' && (
+                            <div className="settings-section anim-fade-in">
+                                <h3 className="section-title">Generation Defaults</h3>
+                                <p className="section-desc">These settings will be pre-selected when you open the AI generator.</p>
+                                
+                                <div className="space-y-8 mt-6">
+                                    <div className="control-group">
+                                        <label className="control-label">Default Tone</label>
+                                        <div className="grid grid-cols-2 gap-3 mt-2">
+                                            {['professional', 'friendly', 'firm', 'apologetic'].map((t) => (
+                                                <button
+                                                    key={t}
+                                                    className={`option-card ${defaultTone === t ? 'active' : ''}`}
+                                                    onClick={() => setDefaultTone(t as ToneType)}
+                                                >
+                                                    {t.charAt(0).toUpperCase() + t.slice(1)}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
 
-                    {activeTab === 'account' && (
-                        <div className="danger-zone-v2">
-                            <h3>Danger Zone</h3>
-                            <div className="danger-card-v2">
-                                <div>
-                                    <p style={{fontWeight: 600, color: 'var(--text-primary)'}}>Delete Account</p>
-                                    <p>Permanently remove all your data and generated replies.</p>
+                                    <div className="control-group">
+                                        <label className="control-label">Default Reply Language</label>
+                                        <select 
+                                            className="control-select mt-2"
+                                            value={defaultLanguage}
+                                            onChange={e => setDefaultLanguage(e.target.value as OutputLanguage)}
+                                        >
+                                            {Object.entries(OUTPUT_LANGUAGES).map(([key, val]) => (
+                                                <option key={key} value={key}>{val.label} {val.icon}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <div className="control-group border-t border-subtle pt-6">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <label className="block font-bold">Show Application Tips</label>
+                                                <span className="text-xs text-muted">Show helpful hints when using the generator</span>
+                                            </div>
+                                            <button 
+                                                className={`toggle-switch ${showTips ? 'on' : ''}`}
+                                                onClick={() => setShowTips(!showTips)}
+                                            >
+                                                <div className="toggle-knob" />
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <button className="btn-danger-outline" style={{color: 'var(--error)', border: '1px solid var(--error)', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer'}}>Delete</button>
                             </div>
+                        )}
+
+                        {activeTab === 'billing' && (
+                            <div className="settings-section anim-fade-in">
+                                <h3 className="section-title">Manage Credits</h3>
+                                <div className="credits-summary-card">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <span className="text-sm font-medium">Available Balance</span>
+                                        <a href="/pricing" className="text-xs font-bold text-accent">Buy More →</a>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="balance-info">
+                                            <span className="balance-val">{credits?.free || 0}</span>
+                                            <span className="balance-label">Free Monthly</span>
+                                        </div>
+                                        <div className="balance-info border-l border-subtle pl-4">
+                                            <span className="balance-val">{credits?.paid || 0}</span>
+                                            <span className="balance-label">Paid Balance</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="mt-8 border-t border-subtle pt-6">
+                                    <h4 className="text-sm font-bold mb-4">Top-up History</h4>
+                                    <div className="empty-state-small">
+                                        <span className="opacity-30">No recent payments found.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="settings-footer">
+                            {saveStatus === 'success' && <span className="text-green-400 text-sm mr-4">✓ Saved successfully</span>}
+                            {saveStatus === 'error' && <span className="text-red-400 text-sm mr-4">Transaction failed.</span>}
+                            <button
+                                className={`save-settings-btn ${isSaving ? 'loading' : ''}`}
+                                onClick={handleSave}
+                                disabled={isSaving}
+                            >
+                                {isSaving ? 'Saving...' : 'Update Settings'}
+                            </button>
                         </div>
-                    )}
+                    </div>
                 </div>
             </main>
+            <UnifiedFooter />
         </div>
     );
 }

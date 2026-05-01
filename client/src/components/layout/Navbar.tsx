@@ -16,7 +16,7 @@ export function Navbar() {
         <nav className="navbar">
             <div className="navbar-inner">
                 <Link to="/" className="navbar-logo">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                         <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                     </svg>
                     ReplyAI
@@ -33,17 +33,18 @@ export function Navbar() {
                                     : 'No credits'}
                         </Link>
                     )}
-                    {user && (
+                    
+                    <Link to="/pricing" className={`navbar-link ${pathname === '/pricing' ? 'active' : ''}`}>Pricing</Link>
+                    
+                    {user ? (
                         <>
                             <Link to="/app" className={`navbar-link ${pathname === '/app' ? 'active' : ''}`}>Generator</Link>
                             <Link to="/dashboard" className={`navbar-link ${pathname === '/dashboard' ? 'active' : ''}`}>History</Link>
                             <Link to="/settings" className={`navbar-link ${pathname === '/settings' ? 'active' : ''}`}>Settings</Link>
                             <button className="navbar-signout" onClick={logOut}>Sign out</button>
                         </>
-                    )}
-                    {!user && (
+                    ) : (
                         <>
-                            <Link to="/pricing" className="navbar-link">Pricing</Link>
                             <Link to="/app" className="navbar-signin">Sign in</Link>
                             <Link to="/app" className="navbar-cta-small">Try Generator</Link>
                         </>
