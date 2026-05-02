@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /app
+Disallow: /dashboard
+Disallow: /settings
+
+Sitemap: https://replyai.com.ng/sitemap.xml
