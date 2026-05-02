@@ -1,12 +1,14 @@
 {
   "name": "ReplyAI",
   "short_name": "ReplyAI",
-  "description": "AI-powered email reply generator",
+  "description": "AI-powered email reply generator. Get 3 polished drafts in seconds.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#07070c",
   "theme_color": "#6c63ff",
+  "lang": "en",
+  "categories": ["productivity", "utilities"],
   "icons": [
-    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]
 }
