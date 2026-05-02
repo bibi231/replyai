@@ -82,4 +82,9 @@ export function FlutterwaveButton({ packId, className, onSuccess }: FlutterwaveB
             onClick={handlePurchase}
             isLoading={isLoading}
             className={className}
-            varia
+            variant="primary"
+        >
+            {pack ? `Pay $${(pack.priceUSD || 1).toFixed(2)} USD` : 'Pay with Flutterwave'}
+        </Button>
+    );
+}
