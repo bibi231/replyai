@@ -37,8 +37,12 @@ export function FlutterwaveButton({ packId, className, onSuccess }: FlutterwaveB
             });
             const { reference, amount, email, publicKey } = res.data;
 
+            const FLW_KEY = (import.meta as any).env?.VITE_FLW_PUBLIC_KEY
+                || publicKey
+                || "FLWPUBK-fd601354d79f90fec8a83d171c88b1dd-X";
+
             window.FlutterwaveCheckout({
-                public_key: publicKey || "FLWPUBK_TEST-REPLACE-ME",
+                public_key: FLW_KEY,
                 tx_ref: reference,
                 amount: amount / 100, // Flutterwave takes regular decimal
                 currency: "USD",
