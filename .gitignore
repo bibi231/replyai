@@ -12,6 +12,4 @@ extension/icon.png
 # Keep extension icons if they are static
 # !extension/icon128.png
 
-# Local backup / playground (do not commit)
-client/src/index_bkp.css
-tmp-awesome-ai-agents/
+# Local back

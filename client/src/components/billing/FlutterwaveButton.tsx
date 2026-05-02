@@ -82,9 +82,4 @@ export function FlutterwaveButton({ packId, className, onSuccess }: FlutterwaveB
             onClick={handlePurchase}
             isLoading={isLoading}
             className={className}
-            variant={pack?.popular ? 'primary' : 'ghost'}
-        >
-            Buy ${ (pack?.priceUSD || 0).toLocaleString() }
-        </Button>
-    );
-}
+            varia
