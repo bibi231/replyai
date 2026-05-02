@@ -7,6 +7,7 @@ import { ReplyAIAd } from '../components/ads/ReplyAIAd';
 import { api } from '../lib/api';
 import type { ToneType, OutputLanguage } from '../types/index';
 import { OUTPUT_LANGUAGES } from '../types/index';
+import { useAuthStore } from '../store/authStore';
 
 const TONES: { value: ToneType; label: string; icon: string }[] = [
     { value: 'professional', label: 'Professional', icon: '💼' },
@@ -44,6 +45,7 @@ Amara`;
 export function AppPage() {
     const { replies, isGenerating, error, generate, clearReplies } = useReply();
     const { credits, refreshCredits } = useCredits();
+    const openPricing = useAuthStore((s: any) => s.openPricing);
 
     const [emailContent, setEmailContent] = useState('');
     const [tone, setTone] = useState<ToneType>('professional');
@@ -91,6 +93,8 @@ export function AppPage() {
 
     async function handleGenerate() {
         if (!emailContent.trim() || isGenerating) return;
+        const totalCredits = (credits?.free ?? 0) + (credits?.paid ?? 0);
+        if (totalCredits <= 0) { openPricing(); return; }
         clearReplies();
         const ctx = tone === 'custom' ? customInstruction : (context || undefined);
         await generate(emailContent, tone, ctx, language);
@@ -244,7 +248,7 @@ export function AppPage() {
                         <div className={`error-banner${error.includes('INSUFFICIENT') ? ' error-banner--credits' : ''}`}>
                             <span>{error}</span>
                             {error.includes('INSUFFICIENT') && (
-                                <a href="/pricing" className="credits-error-link">Get more credits →</a>
+                                <button onClick={openPricing} className="credits-error-link">Get more credits →</button>
                             )}
                         </div>
                     )}

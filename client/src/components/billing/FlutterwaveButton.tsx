@@ -41,6 +41,11 @@ export function FlutterwaveButton({ packId, className, onSuccess }: FlutterwaveB
                 || publicKey
                 || "FLWPUBK-fd601354d79f90fec8a83d171c88b1dd-X";
 
+            if (!window.FlutterwaveCheckout) {
+                toast('Payment gateway still loading. Please wait a moment and try again.', 'error');
+                setIsLoading(false);
+                return;
+            }
             window.FlutterwaveCheckout({
                 public_key: FLW_KEY,
                 tx_ref: reference,
@@ -58,6 +63,9 @@ export function FlutterwaveButton({ packId, className, onSuccess }: FlutterwaveB
                 callback: (data: any) => {
                     if (data.status === "successful") {
                         setTimeout(async () => {
+                            try {
+                                await api.post('/api/credits/verify', { tx_ref: data.tx_ref || reference });
+                            } catch (_) {}
                             await refreshCredits();
                             toast('Credits added with Flutterwave! 🌍', 'success');
                             closePricing();
