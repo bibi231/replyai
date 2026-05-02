@@ -1,14 +1,24 @@
 import { Request, Response, NextFunction } from 'express';
 import admin from 'firebase-admin';
 
-if (!admin.apps.length && process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+if (!admin.apps.length) {
     try {
-        const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
-        admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount)
-        });
+        if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+            // Handle both raw JSON and base64-encoded JSON
+            let raw = process.env.FIREBASE_SERVICE_ACCOUNT_JSON.trim();
+            // Replace literal \n with actual newlines in private_key
+            const serviceAccount = JSON.parse(raw);
+            if (serviceAccount.private_key) {
+                serviceAccount.private_key = serviceAccount.private_key.replace(/\n/g, '
+');
+            }
+            admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+            console.log('[Firebase] Admin initialized successfully');
+        } else {
+            console.error('[Firebase] FIREBASE_SERVICE_ACCOUNT_JSON is not set — auth will fail');
+        }
     } catch (error) {
-        console.error('Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON', error);
+        console.error('[Firebase] Failed to initialize admin SDK:', error);
     }
 }
 
