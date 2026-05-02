@@ -1,7 +1,7 @@
 // ReplyAI Background Service Worker
 // Manages auth state, proxies API calls, handles messages from popup + content scripts
 
-const API_BASE = 'http://localhost:4000';
+const API_BASE = 'https://replyai-api.onrender.com';
 
 // ── Auth State ──────────────────────────────────────────────
 async function getStoredAuth() {
@@ -129,5 +129,5 @@ async function handleLogin(request) {
 
 // Open webapp when extension icon is clicked and popup is not available
 chrome.action.onClicked?.addListener(() => {
-    chrome.tabs.create({ url: 'http://localhost:5173' });
+    chrome.tabs.create({ url: 'https://replyai.com.ng' });
 });

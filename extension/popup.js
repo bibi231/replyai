@@ -364,7 +364,7 @@
     function bindEvents() {
         // Auth
         btnGoogleSignIn.addEventListener('click', handleGoogleSignIn);
-        openWebapp.addEventListener('click', () => chrome.tabs.create({ url: 'http://localhost:5173' }));
+        openWebapp.addEventListener('click', () => chrome.tabs.create({ url: 'https://replyai.com.ng' }));
 
         // Extract
         btnExtract.addEventListener('click', handleExtract);
@@ -403,10 +403,10 @@
         document.addEventListener('click', () => userMenu.classList.remove('active'));
 
         // Menu actions
-        $('#menuWebapp').addEventListener('click', () => chrome.tabs.create({ url: 'http://localhost:5173' }));
+        $('#menuWebapp').addEventListener('click', () => chrome.tabs.create({ url: 'https://replyai.com.ng' }));
         $('#menuLogout').addEventListener('click', handleSignOut);
         $('#btnSignOut').addEventListener('click', handleSignOut);
-        $('#btnBuyCredits').addEventListener('click', () => chrome.tabs.create({ url: 'http://localhost:5173/pricing' }));
+        $('#btnBuyCredits').addEventListener('click', () => chrome.tabs.create({ url: 'https://replyai.com.ng/pricing' }));
 
         // Listen for content script messages
         chrome.runtime.onMessage.addListener((msg) => {
