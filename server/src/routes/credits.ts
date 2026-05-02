@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import { verifyFirebaseToken } from '../middleware/verifyFirebaseToken.js';
 import { checkCredits as getCreditsStatus, addPaidCredits } from '../services/creditsService.js';
+import { eq } from 'drizzle-orm';
+import { payments } from '../db/schema.js';
+import { db } from '../db/index.js';
 import { db } from '../db/index.js';
 import { payments } from '../db/schema.js';
 import { v4 as uuidv4 } from 'uuid';
@@ -86,9 +89,6 @@ router.post('/verify', verifyFirebaseToken, async (req: any, res: any, next: any
         if (!ref) return res.status(400).json({ error: 'Missing reference' });
 
         // Find the pending payment to get credits amount
-        const { eq } = await import('drizzle-orm');
-        const { payments } = await import('../db/schema.js');
-        const { db } = await import('../db/index.js');
         const [payment] = await db.select().from(payments).where(eq(payments.paystackRef, ref));
         if (!payment) return res.status(404).json({ error: 'Payment not found' });
 

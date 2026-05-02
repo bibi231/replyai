@@ -18,18 +18,24 @@ const app = express();
 app.use(helmet());
 app.use(cors({
     origin: (origin, callback) => {
+        // Allow no-origin requests (curl, Postman, server-to-server)
+        if (!origin) return callback(null, true);
+        // Allow Chrome extensions
+        if (origin.startsWith('chrome-extension://')) return callback(null, true);
+        // Allow all Vercel preview deployments for this project
+        if (/^https:\/\/replyai(-client)?(-[a-z0-9]+)*-beetrus-projects\.vercel\.app$/.test(origin)) return callback(null, true);
+        if (origin === 'https://replyai-client.vercel.app') return callback(null, true);
+        // Allow production domains
         const allowedOrigins = [
-            process.env.CLIENT_URL || 'http://localhost:5173',
             'http://localhost:5173',
+            'http://localhost:3000',
             'https://replyai.com.ng',
             'https://www.replyai.com.ng',
-            'https://replyai-client.vercel.app',
-        ];
-        if (!origin) return callback(null, true);
-        if (origin.startsWith('chrome-extension://')) return callback(null, true);
-        if (/^https:\/\/replyai-client-[a-z0-9-]+\.vercel\.app$/.test(origin)) return callback(null, true);
+            process.env.CLIENT_URL,
+        ].filter(Boolean);
         if (allowedOrigins.includes(origin)) return callback(null, true);
-        callback(new Error('Not allowed by CORS'));
+        // Return null false (403) not an Error (500)
+        callback(null, false);
     },
     credentials: true,
 }));
