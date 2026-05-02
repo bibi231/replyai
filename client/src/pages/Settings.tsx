@@ -193,5 +193,26 @@ export function Settings() {
                             </div>
                         )}
 
+
                         <div className="settings-footer">
-                            {saveStatus === 'success' && <span className="tex
+                            {saveStatus === 'success' && (
+                                <span className="text-green-400 text-sm font-medium">✓ Settings saved</span>
+                            )}
+                            {saveStatus === 'error' && (
+                                <span className="text-red-400 text-sm font-medium">Failed to save — try again</span>
+                            )}
+                            <button
+                                className="save-btn"
+                                onClick={handleSave}
+                                disabled={isSaving}
+                            >
+                                {isSaving ? 'Saving...' : 'Save Changes'}
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
+}
