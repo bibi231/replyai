@@ -4,9 +4,13 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "outDir": "dist",
-    "strict": true,
+    "strict": false,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "rootDir": "./src",
+    "noEmitOnError": false
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

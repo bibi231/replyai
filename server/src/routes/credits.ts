@@ -4,8 +4,6 @@ import { checkCredits as getCreditsStatus, addPaidCredits } from '../services/cr
 import { eq } from 'drizzle-orm';
 import { payments } from '../db/schema.js';
 import { db } from '../db/index.js';
-import { db } from '../db/index.js';
-import { payments } from '../db/schema.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const router = Router();

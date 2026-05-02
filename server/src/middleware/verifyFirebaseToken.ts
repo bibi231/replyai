@@ -9,8 +9,7 @@ if (!admin.apps.length) {
             // Replace literal \n with actual newlines in private_key
             const serviceAccount = JSON.parse(raw);
             if (serviceAccount.private_key) {
-                serviceAccount.private_key = serviceAccount.private_key.replace(/\n/g, '
-');
+                serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
             }
             admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
             console.log('[Firebase] Admin initialized successfully');
