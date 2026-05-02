@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const NETWORK_PRODUCTS = [
-  { name: 'HarvestAI',   desc: 'Premium Web Data & Lead Generation', link: 'https://harvestai.com.ng', icon: '🌾' },
-  { name: 'Star Ranker', desc: 'Entertainment Analytics & PR',       link: '#', icon: '⭐' },
-  { name: 'SafeNet',     desc: 'Digital Security & Fraud Protection', link: '#', icon: '🛡️' },
-  { name: 'Sonic Phil.', desc: 'Music, Philosophy & Art',            link: '#', icon: '🎵' },
+  { name: 'HarvestAI',   desc: 'AI-powered web data & lead generation',   link: 'https://harvestai.com.ng',        icon: '🌾' },
+  { name: 'Portfolio',   desc: "Bitrus's work, projects & contact",        link: 'https://trueweb.tech',            icon: '🧑‍💻' },
+  { name: 'Star Ranker', desc: 'Entertainment analytics & PR',             link: '#',                               icon: '⭐' },
+  { name: 'SafeNet',     desc: 'Digital security & fraud protection',      link: '#',                               icon: '🛡️' },
 ];
 
 const SOCIAL_LINKS = [

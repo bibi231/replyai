@@ -21,8 +21,20 @@ export function useAuth() {
                         canGenerate: res.data.credits.canGenerate,
                         resetDate: res.data.credits.resetDate
                     });
-                } catch (e) {
-                    console.error("Auth sync error", e);
+                } catch (e: any) {
+                    console.error('[ReplyAI] auth/sync failed:', e?.response?.status, e?.message);
+                    try {
+                        const cr = await api.get('/api/credits');
+                        setCredits({
+                            free: cr.data.freeRemaining,
+                            paid: cr.data.paidCredits,
+                            canGenerate: cr.data.canGenerate,
+                            resetDate: cr.data.resetDate
+                        });
+                    } catch (e2) {
+                        console.error('[ReplyAI] credits fallback failed:', e2);
+                        setCredits({ free: 0, paid: 0, canGenerate: false, resetDate: null });
+                    }
                 }
             } else {
                 setCredits(null);

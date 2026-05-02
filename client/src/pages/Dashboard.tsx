@@ -29,26 +29,27 @@ export function Dashboard() {
     const [error, setError] = useState<string | null>(null);
     const [copiedId, setCopiedId] = useState<string | null>(null);
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const [histRes, tempRes, statsRes] = await Promise.all([
-                    api.get('/api/reply/history'),
-                    api.get('/api/templates'),
-                    api.get('/api/reply/stats')
-                ]);
-                setHistory(histRes.data);
-                setTemplates(tempRes.data);
-                setStats(statsRes.data);
-            } catch (err) {
-                setError('Failed to load dashboard data');
-                console.error(err);
-            } finally {
-                setIsLoading(false);
-            }
+    async function fetchData() {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const [histRes, tempRes, statsRes] = await Promise.all([
+                api.get('/api/reply/history'),
+                api.get('/api/templates'),
+                api.get('/api/reply/stats')
+            ]);
+            setHistory(histRes.data);
+            setTemplates(tempRes.data);
+            setStats(statsRes.data);
+        } catch (err: any) {
+            console.error('[Dashboard] fetch error:', err?.response?.status, err?.message);
+            setError('Failed to load dashboard data. Check your connection and try again.');
+        } finally {
+            setIsLoading(false);
         }
-        fetchData();
-    }, []);
+    }
+
+    useEffect(() => { fetchData(); }, []);
 
     async function handleDeleteTemplate(id: string) {
         if (!confirm('Are you sure you want to delete this template?')) return;
@@ -115,11 +116,23 @@ export function Dashboard() {
                     </button>
                 </div>
 
-                {isLoading ? (
+                {error && (
+                    <div style={{ textAlign: 'center', padding: 48 }}>
+                        <p style={{ color: 'var(--error)', marginBottom: 16 }}>{error}</p>
+                        <button
+                            onClick={fetchData}
+                            style={{ padding: '10px 24px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 'var(--radius-md)', cursor: 'pointer', fontWeight: 700 }}
+                        >
+                            Retry
+                        </button>
+                    </div>
+                )}
+
+                {!error && isLoading ? (
                     <div style={{ display: 'flex', justifyContent: 'center', padding: 48 }}>
                         <Spinner size={32} />
                     </div>
-                ) : activeTab === 'replies' ? (
+                ) : !error && activeTab === 'replies' ? (
                     history.length === 0 ? (
                         <div className="empty-state" style={{ minHeight: 300 }}>
                             <h3 className="empty-state-title">No history yet</h3>
@@ -161,7 +174,7 @@ export function Dashboard() {
                             </div>
                         </div>
                     )
-                ) : (
+                ) : !error ? (
                     /* Templates View */
                     <div className="templates-grid">
                         {templates.length === 0 ? (
@@ -200,7 +213,7 @@ export function Dashboard() {
                             ))
                         )}
                     </div>
-                )}
+                ) : null}
             </main>
         </div>
     );

@@ -25,10 +25,17 @@ export function useReply() {
                 } : null
             }));
         } catch (err: any) {
-            if (err.response?.data?.message) {
+            console.error('[ReplyAI] generate error:', err?.response?.status, err?.response?.data, err?.message);
+            if (err?.response?.data?.message) {
                 setError(err.response.data.message);
+            } else if (err?.response?.status === 401) {
+                setError('Session expired — please sign in again.');
+            } else if (err?.response?.status === 503) {
+                setError('AI service temporarily unavailable. Please try again.');
+            } else if (!err?.response) {
+                setError('Network error — check your connection and try again.');
             } else {
-                setError('An unexpected error occurred.');
+                setError('Something went wrong. Please try again.');
             }
         } finally {
             setIsGenerating(false);

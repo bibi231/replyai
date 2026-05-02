@@ -240,10 +240,12 @@ export function AppPage() {
 
                     <ReplyAIAd />
 
-                    {error?.includes('INSUFFICIENT') && (
-                        <div className="credits-error-card">
-                            <p>You've used all your free replies for this month.</p>
-                            <a href="/pricing" className="credits-error-link">Get more credits →</a>
+                    {error && (
+                        <div className={`error-banner${error.includes('INSUFFICIENT') ? ' error-banner--credits' : ''}`}>
+                            <span>{error}</span>
+                            {error.includes('INSUFFICIENT') && (
+                                <a href="/pricing" className="credits-error-link">Get more credits →</a>
+                            )}
                         </div>
                     )}
                 </div>
