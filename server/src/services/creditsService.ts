@@ -131,13 +131,13 @@ export async function upsertUser(
             displayName,
             photoUrl,
             freeCreditsResetAt: new Date(),
-        });
+        } as any);
     } else {
         await db.update(users).set({
             email,
             displayName: displayName || existingUser.displayName,
             photoUrl: photoUrl || existingUser.photoUrl,
             updatedAt: new Date()
-        }).where(eq(users.id, uid));
+        } as any).where(eq(users.id, uid));
     }
 }

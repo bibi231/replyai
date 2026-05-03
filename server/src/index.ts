@@ -14,6 +14,7 @@ import { AIAllModelsFailedError, AIParseError } from './services/aiService.js';
 import { logger } from './utils/logger.js';
 
 const app = express();
+app.set('trust proxy', 1);
 
 app.use(helmet());
 app.use(cors({
@@ -65,7 +66,7 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     if (err.status || err.statusCode) {
         return res.status(err.status || err.statusCode).json({ error: err.name || 'ERROR', message: err.message });
     }
-    return res.status(500).json({ error: 'INTERNAL_SERVER_ERROR', message: 'An unexpected error occurred.' });
+    return res.status(500).json({ error: 'INTERNAL_SERVER_ERROR', message: 'An unexpected error occurred: ' + (err.message || String(err)) });
 });
 
 const isVercel = !!process.env.VERCEL;
