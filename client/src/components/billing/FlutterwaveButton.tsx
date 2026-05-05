@@ -37,9 +37,7 @@ export function FlutterwaveButton({ packId, className, onSuccess }: FlutterwaveB
             });
             const { reference, amount, email, publicKey } = res.data;
 
-            const FLW_KEY = (import.meta as any).env?.VITE_FLW_PUBLIC_KEY
-                || publicKey
-                || "FLWPUBK-fd601354d79f90fec8a83d171c88b1dd-X";
+            const FLW_KEY = (import.meta as any).env?.VITE_FLW_PUBLIC_KEY || publicKey;
 
             if (!window.FlutterwaveCheckout) {
                 toast('Payment gateway still loading. Please wait a moment and try again.', 'error');

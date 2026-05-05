@@ -7,8 +7,7 @@ export function openPaystackPopup(options: {
 }): void {
     const PaystackPop = (window as any).PaystackPop;
     if (!PaystackPop) {
-        alert('Payment gateway still loading. Please wait a moment and try again.');
-        return;
+        throw new Error('Payment gateway still loading. Please wait a moment and try again.');
     }
     const handler = PaystackPop.setup({
         key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
