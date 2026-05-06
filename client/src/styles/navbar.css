@@ -58,6 +58,7 @@
     color: #fff;
 }
 
+/* Gear icon — hidden on desktop (text link shown instead), shown on mobile via media query */
 .navbar-settings-icon {
     display: none;
     color: var(--text-secondary);
@@ -172,24 +173,50 @@
     .navbar-right {
         gap: 8px;
     }
+
+    /* Hide all nav links by default on mobile */
     .navbar-link {
         display: none;
     }
-    .navbar-link.active,
-    .navbar-link-settings,
-    .navbar-cta-small,
-    .navbar-signin,
-    .navbar-signout,
-    .credits-badge-link {
+
+    /* Always show these on mobile — MUST come AFTER the .navbar-link { display: none } rule */
+    .navbar-link.active {
         display: flex;
     }
-    .navbar-settings-icon {
-        display: none;
+
+    /* Settings text link: always visible when logged in on mobile.
+       Using .navbar-right .navbar-link-settings for higher specificity than .navbar-link alone. */
+    .navbar-right .navbar-link-settings {
+        display: flex !important;
+        align-items: center;
     }
+
+    .navbar-cta-small {
+        display: flex;
+        font-size: 12px;
+        padding: 8px 14px;
+    }
+
+    .navbar-signin {
+        display: flex;
+    }
+
     .navbar-signout {
+        display: flex;
         font-size: 12px;
         padding: 6px 10px;
         border: 1px solid rgba(255,255,255,0.1);
         border-radius: var(--radius-sm);
+    }
+
+    .credits-badge-link {
+        display: flex;
+        max-width: 110px;
+        font-size: 11px;
+    }
+
+    /* Hide gear icon on mobile since text link is shown */
+    .navbar-settings-icon {
+        display: none;
     }
 }
