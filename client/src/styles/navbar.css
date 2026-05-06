@@ -176,7 +176,7 @@
         display: none;
     }
     .navbar-link.active,
-    .navbar-link[href="/settings"],
+    .navbar-link-settings,
     .navbar-cta-small,
     .navbar-signin,
     .navbar-signout,
