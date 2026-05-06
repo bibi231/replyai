@@ -59,6 +59,25 @@
     color: #fff;
 }
 
+.navbar-settings-icon {
+    display: none;
+    color: var(--text-secondary);
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-surface);
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.navbar-settings-icon:hover {
+    color: #fff;
+    border-color: rgba(255,255,255,0.2);
+}
+
 .credits-badge-link {
     display: flex;
     align-items: center;
@@ -151,6 +170,9 @@
     .navbar-signin,
     .navbar-signout,
     .credits-badge-link {
+        display: flex;
+    }
+    .navbar-settings-icon {
         display: flex;
     }
     .navbar-signout {

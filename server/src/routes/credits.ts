@@ -39,13 +39,13 @@ router.post('/initiate-purchase', verifyFirebaseToken, async (req: any, res: any
             }
         } else if (currency === 'USD') {
             if (pack === 'starter') {
-                amount = 100; // $1.00 in cents
+                amount = 500; // $5.00 in cents
                 credits = 30;
             } else if (pack === 'pro') {
-                amount = 300; // $3.00
+                amount = 1200; // $12.00
                 credits = 100;
             } else if (pack === 'power') {
-                amount = 1000; // $10.00
+                amount = 2500; // $25.00
                 credits = 300;
             }
         }
