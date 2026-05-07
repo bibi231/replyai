@@ -51,7 +51,7 @@ export function Pricing() {
                 <span className="pricing-pack-name">{pack.name}</span>
                 <div className="pricing-price">
                   <span className="pricing-amount">
-                    {currency === 'NGN' ? `â¦${pack.price.toLocaleString()}` : `$${pack.priceUSD}`}
+                    {currency === 'NGN' ? `₦${pack.price.toLocaleString()}` : `$${pack.priceUSD}`}
                   </span>
                 </div>
                 <div className="pricing-credits">{pack.credits} credits</div>
