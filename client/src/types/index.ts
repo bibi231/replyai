@@ -42,7 +42,7 @@ export interface CreditPack {
 /**
  * NGN: localised pricing for Nigerian users (Paystack)
  * USD: still well below US-market norms but priced for sustainable global revenue (Flutterwave)
- *      e.g. Starter 30 credits → $5 (~₦7,500 effective) vs ₦1,500 local
+ *      e.g. Starter 30 credits â $5 (~â¦7,500 effective) vs â¦1,500 local
  */
 export const CREDIT_PACKS: CreditPack[] = [
     {
@@ -51,7 +51,7 @@ export const CREDIT_PACKS: CreditPack[] = [
         price: 1500,
         priceUSD: 5,
         credits: 30,
-        pricePerReply: '₦50',
+        pricePerReply: 'â¦50',
         pricePerReplyUSD: '$0.17',
     },
     {
@@ -60,7 +60,7 @@ export const CREDIT_PACKS: CreditPack[] = [
         price: 3500,
         priceUSD: 12,
         credits: 100,
-        pricePerReply: '₦35',
+        pricePerReply: 'â¦35',
         pricePerReplyUSD: '$0.12',
         popular: true,
     },
@@ -70,12 +70,12 @@ export const CREDIT_PACKS: CreditPack[] = [
         price: 8000,
         priceUSD: 25,
         credits: 300,
-        pricePerReply: '₦27',
+        pricePerReply: 'â¦27',
         pricePerReplyUSD: '$0.08',
     },
 ];
 
-// ── Geo helpers ───────────────────────────────────────────
+// ââ Geo helpers âââââââââââââââââââââââââââââââââââââââââââ
 const AFRICAN_TIMEZONES = [
     'Africa/Lagos', 'Africa/Abidjan', 'Africa/Accra', 'Africa/Addis_Ababa',
     'Africa/Algiers', 'Africa/Asmara', 'Africa/Bamako', 'Africa/Bangui',
