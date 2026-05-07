@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const NETWORK_PRODUCTS = [
-  { name: 'HarvestAI',   desc: 'AI-powered web data & lead generation',   link: 'https://harvestai.com.ng',        icon: '🌾' },
-  { name: 'Star Ranker', desc: 'Entertainment analytics & PR',             link: '#',                               icon: '⭐' },
-  { name: 'Portfolio',   desc: "Bitrus's work, projects & contact",        link: 'https://trueweb.tech',            icon: '🧑‍💻' },
+  { name: 'HarvestAI',   desc: 'AI-powered web data & lead generation',   link: 'https://harvestai.com.ng',        icon: 'ð¾' },
+  { name: 'Star Ranker', desc: 'Entertainment analytics & PR',             link: '#',                               icon: 'â­' },
+  { name: 'Portfolio',   desc: "Bitrus's work, projects & contact",        link: 'https://beetrus-portfolio.vercel.app',            icon: 'ð§âð»' },
 ];
 
 const SOCIAL_LINKS = [
@@ -95,7 +95,7 @@ export function UnifiedFooter() {
           </div>
         </div>
 
-        {/* Network panel — slides open */}
+        {/* Network panel â slides open */}
         <div className={`rai-footer-network ${isNetworkOpen ? 'is-open' : ''}`}>
           <div className="rai-footer-network-grid">
             {NETWORK_PRODUCTS.map(p => (
@@ -118,7 +118,7 @@ export function UnifiedFooter() {
 
         <div className="rai-footer-bottom">
           <span className="rai-footer-meta">
-            © {year} <strong>TrueWeb Solutions</strong>. Made with care in Nigeria 🇳🇬.
+            Â© {year} <strong>TrueWeb Solutions</strong>. Made with care in Nigeria ð³ð¬.
           </span>
           <span className="rai-footer-status">
             <span className="rai-footer-dot" /> All systems operational
