@@ -17,52 +17,48 @@ import { Cookies } from './pages/Cookies';
 import { Settings } from './pages/Settings';
 
 import { CookieBanner } from './components/layout/CookieBanner';
-import { GlobalNetworkAd } from './components/ads/GlobalNetworkAd';
-import { NewsletterPopup } from './components/marketing/NewsletterPopup';
 
 export default function App() {
-    useAuth();
+  useAuth();
 
-    return (
-        <div className="app-container">
-            <main className="layout-wrapper">
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/pricing" element={<Pricing />} />
-                    <Route path="/privacy" element={<Privacy />} />
-                    <Route path="/terms" element={<Terms />} />
-                    <Route path="/refund" element={<Refund />} />
-                    <Route path="/cookies" element={<Cookies />} />
-                    <Route path="/settings" element={
-                        <AuthGuard>
-                            <Settings />
-                        </AuthGuard>
-                    } />
-                    <Route
-                        path="/app"
-                        element={
-                            <AuthGuard>
-                                <AppPage />
-                            </AuthGuard>
-                        }
-                    />
-                    <Route
-                        path="/dashboard"
-                        element={
-                            <AuthGuard>
-                                <Dashboard />
-                            </AuthGuard>
-                        }
-                    />
-                </Routes>
-            </main>
+  return (
+    <div className="app-container">
+      <main className="layout-wrapper">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/refund" element={<Refund />} />
+          <Route path="/cookies" element={<Cookies />} />
+          <Route path="/settings" element={
+            <AuthGuard>
+              <Settings />
+            </AuthGuard>
+          } />
+          <Route
+            path="/app"
+            element={
+              <AuthGuard>
+                <AppPage />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <AuthGuard>
+                <Dashboard />
+              </AuthGuard>
+            }
+          />
+        </Routes>
+      </main>
 
-            <GlobalNetworkAd />
-            <UnifiedFooter />
-            <PricingModal />
-            <ToastContainer />
-            <CookieBanner />
-            <NewsletterPopup />
-        </div>
-    );
+      <UnifiedFooter />
+      <PricingModal />
+      <ToastContainer />
+      <CookieBanner />
+    </div>
+  );
 }
