@@ -22,9 +22,9 @@ export function Home() {
 
   const DEMO_EMAILS = [
     { 
-      initial: 'C', sender: 'Chidi Okonkwo', subject: 'Re: Invoice #2024-047 â Overdue', 
-      body: "Hello, I'm writing to follow up on the outstanding payment of â¦350,000 for the website redesign. It's been 3 weeks past the due date...",
-      reply: "I understand the urgency regarding Invoice #2024-047. I've just confirmed with our finance team, and the payment of â¦350,000 has been initiated."
+      initial: 'C', sender: 'Chidi Okonkwo', subject: 'Re: Invoice #2024-047 — Overdue', 
+      body: "Hello, I'm writing to follow up on the outstanding payment of ₦350,000 for the website redesign. It's been 3 weeks past the due date...",
+      reply: "I understand the urgency regarding Invoice #2024-047. I've just confirmed with our finance team, and the payment of ₦350,000 has been initiated."
     },
     { 
       initial: 'A', sender: 'Aisha Bello', subject: 'Partnership Proposal: TrueWeb x TechLab', 
@@ -32,7 +32,7 @@ export function Home() {
       reply: "Thank you for reaching out, Aisha! Your proposal sounds exciting. I've followed TrueWeb's work closely and would love to discuss the TechLab partnership."
     },
     { 
-      initial: 'T', sender: 'Tunde Adeyemi', subject: 'Internship Application â Bitrus SIWES', 
+      initial: 'T', sender: 'Tunde Adeyemi', subject: 'Internship Application – Bitrus SIWES', 
       body: "I am writing to apply for the backend engineering internship. I have 2 years experience with Node.js and Drizzle ORM...",
       reply: "Dear Tunde, your experience with Node.js and Drizzle is impressive. We'd like to schedule an interview next week to discuss your role further."
     }
@@ -94,7 +94,7 @@ export function Home() {
         <div className="hero-content">
           <div className="hero-badge">
             <span className="hero-badge-dot" />
-            Free to install Â· 5 replies/month free
+            Free to install · 5 replies/month free
           </div>
 
           <h1 className="hero-headline">
@@ -128,11 +128,11 @@ export function Home() {
               target="_blank"
               rel="noopener noreferrer"
               className="hero-cta-secondary"
-              title="Chrome Extension â coming soon"
+              title="Chrome Extension — coming soon"
               style={{ display: 'flex', alignItems: 'center', gap: 6, opacity: 0.7 }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
-              Chrome Extension â¦
+              Chrome Extension ✦
             </a>
           </div>
 
@@ -208,7 +208,7 @@ export function Home() {
                 </div>
                 <div className="whatsapp-input-mock">
                   Choose a tone and generate...
-                  <div className="whatsapp-smiley">ð</div>
+                  <div className="whatsapp-smiley">😊</div>
                 </div>
                 <div className="whatsapp-mic">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -244,7 +244,7 @@ export function Home() {
           <div className="steps-grid">
             {[
               { step: '01', title: 'Install the extension', desc: 'Add ReplyAI to Chrome in 10 seconds. Sign in with Google. Done.' },
-              { step: '02', title: 'Open any email', desc: 'Visit Gmail. Open an email you need to reply to. The â¡ ReplyAI button appears automatically.' },
+              { step: '02', title: 'Open any email', desc: 'Visit Gmail. Open an email you need to reply to. The ⚡ ReplyAI button appears automatically.' },
               { step: '03', title: 'Pick a draft and insert', desc: 'Choose Professional, Friendly, Firm, or Custom. Click Generate. Pick the best draft and insert it directly into Gmail.' },
             ].map((s) => (
               <div key={s.step} className="step-card">
@@ -264,11 +264,11 @@ export function Home() {
           <h2 className="section-title">Reply in the way they understand.</h2>
           <div className="langs-grid">
             {[
-                { name: 'English', icon: 'ð¬ð§', desc: 'Global standards for professional outreach.' },
-                { name: 'Pidgin', icon: 'ð³ð¬', desc: 'Perfect for that "street" or casual Lagos vibe.' },
-                { name: 'Yoruba', icon: 'ð³ð¬', desc: 'Respectful and culturally aligned responses.' },
-                { name: 'Hausa', icon: 'ð³ð¬', desc: 'Formal and business-ready Northern dialects.' },
-                { name: 'French', icon: 'ð«ð·', desc: 'Connect with our Francophone neighbors seamlessly.' }
+                { name: 'English', icon: '🇬🇧', desc: 'Global standards for professional outreach.' },
+                { name: 'Pidgin', icon: '🇳🇬', desc: 'Perfect for that "street" or casual Lagos vibe.' },
+                { name: 'Yoruba', icon: '🇳🇬', desc: 'Respectful and culturally aligned responses.' },
+                { name: 'Hausa', icon: '🇳🇬', desc: 'Formal and business-ready Northern dialects.' },
+                { name: 'French', icon: '🇫🇷', desc: 'Connect with our Francophone neighbors seamlessly.' }
             ].map(l => (
                 <div key={l.name} className="lang-feature-card">
                     <span className="lang-icon">{l.icon}</span>
