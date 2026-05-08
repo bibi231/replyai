@@ -19,6 +19,30 @@ import { Settings } from './pages/Settings';
 import { CookieBanner } from './components/layout/CookieBanner';
 import { NewsletterPopup } from './components/marketing/NewsletterPopup';
 
+// ── Sticky Anchor Ad ──────────────────────────────────────
+function StickyAnchorAd() {
+  const [visible, setVisible] = React.useState(true);
+  React.useEffect(() => {
+    try { ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({}); } catch(e) {}
+  }, []);
+  if (!visible) return null;
+  return (
+    <div className="sticky-anchor-ad">
+      <ins
+        className="adsbygoogle"
+        style={{ display: 'block' }}
+        data-ad-client="ca-pub-7798519284162823"
+        data-ad-slot="auto"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
+      <button className="sticky-anchor-ad-close" onClick={() => setVisible(false)} aria-label="Close ad">×</button>
+    </div>
+  );
+}
+// ──────────────────────────────────────────────────────────
+
+
 export default function App() {
   useAuth();
 
@@ -57,6 +81,7 @@ export default function App() {
       </main>
 
       <UnifiedFooter />
+      <StickyAnchorAd />
       <PricingModal />
       <ToastContainer />
       <CookieBanner />
