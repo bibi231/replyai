@@ -816,3 +816,55 @@ body {
   border-color: rgba(168,85,247,0.3);
   color: #d8b4fe;
 }
+
+
+/* ── Sticky Anchor Ad Banner ── */
+.sticky-anchor-ad {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9990;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  padding: 4px 48px 4px 8px;
+  background: rgba(10, 10, 18, 0.97);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.4);
+}
+.sticky-anchor-ad ins {
+  display: block;
+  width: 100%;
+  max-width: 728px;
+}
+.sticky-anchor-ad-close {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: rgba(255,255,255,0.6);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.sticky-anchor-ad-close:hover {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+@media (max-width: 768px) {
+  .sticky-anchor-ad {
+    min-height: 52px;
+    padding: 4px 44px 4px 4px;
+  }
+}
