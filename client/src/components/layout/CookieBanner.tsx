@@ -1,38 +1,80 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+const KEY = 'replyai_cookie_consent';
+
+function applyConsent(accepted: boolean) {
+  const w = window as any;
+  const consent = accepted
+    ? { analytics_storage:'granted', ad_storage:'granted', ad_user_data:'granted', ad_personalization:'granted' }
+    : { analytics_storage:'denied',  ad_storage:'denied',  ad_user_data:'denied',  ad_personalization:'denied'  };
+  if (w.gtag) w.gtag('consent', 'update', consent);
+  // Block/unblock GA
+  w['ga-disable-G-XXXXXXXXXX'] = !accepted;
+  if (!accepted) {
+    // Delete GA cookies
+    ['_ga','_gid','_gat'].forEach(name => {
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${location.hostname}`;
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${location.hostname}`;
+    });
+    document.cookie.split(';').forEach(c => {
+      const n = c.trim().split('=')[0];
+      if (n.startsWith('_ga') || n.startsWith('_gid') || n.startsWith('_gat')) {
+        document.cookie = `${n}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+      }
+    });
+  }
+}
+
 export function CookieBanner() {
-    const [isVisible, setIsVisible] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [details, setDetails] = useState(false);
 
-    useEffect(() => {
-        const consent = localStorage.getItem('replyai_cookie_consent');
-        if (!consent) {
-            const timer = setTimeout(() => setIsVisible(true), 1500);
-            return () => clearTimeout(timer);
-        }
-    }, []);
+  useEffect(() => {
+    const stored = localStorage.getItem(KEY);
+    if (!stored) {
+      // Default: deny all until user chooses
+      const w = window as any;
+      if (w.gtag) w.gtag('consent', 'default', {
+        analytics_storage:'denied', ad_storage:'denied',
+        ad_user_data:'denied', ad_personalization:'denied',
+      });
+      setTimeout(() => setVisible(true), 1200);
+    } else {
+      applyConsent(stored === 'accepted');
+    }
+  }, []);
 
-    const handleAccept = () => {
-        localStorage.setItem('replyai_cookie_consent', 'true');
-        setIsVisible(false);
-    };
+  const accept = () => { localStorage.setItem(KEY,'accepted'); applyConsent(true);  setVisible(false); };
+  const decline= () => { localStorage.setItem(KEY,'declined'); applyConsent(false); setVisible(false); };
 
-    if (!isVisible) return null;
+  if (!visible) return null;
 
-    return (
-        <div className="cookie-banner">
-            <div className="cookie-inner">
-                <div className="cookie-text">
-                    <p>
-                        We use cookies to enhance your experience and secure your account. 
-                        By continuing to use ReplyAI, you agree to our <Link to="/cookies">Cookies Policy</Link>.
-                    </p>
-                </div>
-                <div className="cookie-actions">
-                    <button className="btn-secondary btn-sm" onClick={() => setIsVisible(false)}>Decline</button>
-                    <button className="btn-primary btn-sm" onClick={handleAccept}>Accept All</button>
-                </div>
-            </div>
+  return (
+    <div className="cookie-banner" role="dialog" aria-label="Cookie consent">
+      <div className="cookie-inner">
+        <div className="cookie-text">
+          <p>
+            <strong>We use cookies</strong> — essential ones keep you logged in; optional analytics &amp; ad cookies
+            help us improve ReplyAI and show relevant ads.{' '}
+            <Link to="/cookies">Learn more</Link>
+          </p>
+          {details && (
+            <ul className="cookie-detail-list">
+              <li><strong>Essential</strong> — login sessions, security. Always active.</li>
+              <li><strong>Analytics</strong> — Google Analytics (page views). Off until accepted.</li>
+              <li><strong>Advertising</strong> — Google AdSense (relevant ads). Off until accepted.</li>
+            </ul>
+          )}
+          <button className="cookie-details-toggle" onClick={() => setDetails(d => !d)}>
+            {details ? 'Hide details ▲' : 'Show details ▼'}
+          </button>
         </div>
-    );
+        <div className="cookie-actions">
+          <button className="btn-secondary btn-sm" onClick={decline}>Decline optional</button>
+          <button className="btn-primary btn-sm" onClick={accept}>Accept all</button>
+        </div>
+      </div>
+    </div>
+  );
 }
