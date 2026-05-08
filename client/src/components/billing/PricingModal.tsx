@@ -3,10 +3,10 @@ import { Modal } from '../ui/Modal';
 import { useAuthStore } from '../../store/authStore';
 import { CREDIT_PACKS } from '../../types';
 import { PaystackButton } from './PaystackButton';
-import { GumroadButton } from './GumroadButton';
+import { GTSquadButton } from './GTSquadButton';
 import { LemonSqueezyButton } from './LemonSqueezyButton';
 
-type PayGateway = 'paystack' | 'gumroad' | 'lemonsqueezy';
+type PayGateway = 'paystack' | 'gtsquad' | 'lemonsqueezy';
 
 export function PricingModal() {
     const { isPricingOpen, closePricing } = useAuthStore();
@@ -14,7 +14,7 @@ export function PricingModal() {
 
     const GATEWAYS: { id: PayGateway; label: string; sub: string; flag: string }[] = [
         { id: 'paystack',     label: 'Paystack',      sub: 'NGN · Card/Transfer',   flag: '🇳🇬' },
-        { id: 'gumroad',      label: 'Gumroad',       sub: 'USD · Card worldwide',  flag: '🌍' },
+        { id: 'gtsquad',      label: 'GTSquad',        sub: 'Card worldwide',        flag: '💳' },
         { id: 'lemonsqueezy', label: 'LemonSqueezy',  sub: 'USD · Card worldwide',  flag: '💛' },
     ];
 
@@ -95,7 +95,7 @@ export function PricingModal() {
 
                         <div className="mt-auto">
                             {gateway === 'paystack' && <PaystackButton packId={pack.id as any} />}
-                            {gateway === 'gumroad' && <GumroadButton packId={pack.id as any} />}
+                            {gateway === 'gtsquad' && <GTSquadButton packId={pack.id as any} />}
                             {gateway === 'lemonsqueezy' && <LemonSqueezyButton packId={pack.id as any} />}
                         </div>
                     </div>
