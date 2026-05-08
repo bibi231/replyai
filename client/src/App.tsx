@@ -22,10 +22,23 @@ import { NewsletterPopup } from './components/marketing/NewsletterPopup';
 // ── Sticky Anchor Ad ──────────────────────────────────────
 function StickyAnchorAd() {
   const [visible, setVisible] = React.useState(true);
+  const [adLoaded, setAdLoaded] = React.useState(false);
+
   React.useEffect(() => {
-    try { ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({}); } catch(e) {}
+    try {
+      const adsbygoogle = (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+      adsbygoogle.push({});
+      // Check if ad filled after delay
+      setTimeout(() => {
+        const ins = document.querySelector('.sticky-anchor-ad ins.adsbygoogle') as HTMLElement | null;
+        if (ins && ins.getAttribute('data-ad-status') === 'filled') setAdLoaded(true);
+        else setAdLoaded(false);
+      }, 2500);
+    } catch(e) {}
   }, []);
+
   if (!visible) return null;
+
   return (
     <div className="sticky-anchor-ad">
       <ins
@@ -36,6 +49,12 @@ function StickyAnchorAd() {
         data-ad-format="auto"
         data-full-width-responsive="true"
       />
+      {!adLoaded && (
+        <div className="sticky-anchor-ad-placeholder">
+          <span>🚀 Ad space — <strong>partner with us</strong> to reach thousands of users</span>
+          <a href="mailto:peterjohn2343@gmail.com" className="sticky-anchor-ad-cta">Advertise here</a>
+        </div>
+      )}
       <button className="sticky-anchor-ad-close" onClick={() => setVisible(false)} aria-label="Close ad">×</button>
     </div>
   );
