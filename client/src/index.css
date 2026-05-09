@@ -819,51 +819,24 @@ body {
 
 
 /* ── Sticky Anchor Ad Banner ── */
-.sticky-anchor-ad {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 9990;
+.inline-ad-banner {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 60px;
-  padding: 4px 48px 4px 8px;
-  background: rgba(10, 10, 18, 0.97);
-  border-top: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 -4px 24px rgba(0,0,0,0.4);
+  min-height: 80px;
+  padding: 16px 24px;
+  background: rgba(10, 10, 18, 0.6);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  width: 100%;
 }
-.sticky-anchor-ad ins {
+.inline-ad-banner ins {
   display: block;
   width: 100%;
   max-width: 728px;
 }
-.sticky-anchor-ad-close {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255,255,255,0.1);
-  border: none;
-  color: rgba(255,255,255,0.6);
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 16px;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s;
-}
-.sticky-anchor-ad-close:hover {
-  background: rgba(255,255,255,0.2);
-  color: #fff;
-}
 @media (max-width: 768px) {
-  .sticky-anchor-ad {
+  .inline-ad-banner {
     min-height: 52px;
     padding: 4px 44px 4px 4px;
   }
@@ -1093,7 +1066,7 @@ body {
 .rai-nl-foot a { color: rgba(255,255,255,0.45); }
 
 /* ── Sticky Ad Placeholder ── */
-.sticky-anchor-ad-placeholder {
+.inline-ad-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1104,8 +1077,8 @@ body {
   font-size: 13px;
   color: rgba(255,255,255,0.6);
 }
-.sticky-anchor-ad-placeholder strong { color: rgba(255,255,255,0.85); }
-.sticky-anchor-ad-cta {
+.inline-ad-placeholder strong { color: rgba(255,255,255,0.85); }
+.inline-ad-cta {
   padding: 6px 16px;
   background: rgba(124,106,247,0.2);
   border: 1px solid rgba(124,106,247,0.4);
@@ -1117,4 +1090,4 @@ body {
   white-space: nowrap;
   transition: all 0.2s;
 }
-.sticky-anchor-ad-cta:hover { background: rgba(124,106,247,0.35); color: #fff; }
+.inline-ad-cta:hover { background: rgba(124,106,247,0.35); color: #fff; }
