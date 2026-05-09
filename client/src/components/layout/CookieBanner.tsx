@@ -2,15 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const KEY = 'replyai_cookie_consent';
+const GA_ID = 'G-XXXXXXXXXX'; // TODO: Replace with your GA4 Measurement ID
 
 function applyConsent(accepted: boolean) {
   const w = window as any;
   const consent = accepted
     ? { analytics_storage:'granted', ad_storage:'granted', ad_user_data:'granted', ad_personalization:'granted' }
     : { analytics_storage:'denied',  ad_storage:'denied',  ad_user_data:'denied',  ad_personalization:'denied'  };
-  if (w.gtag) w.gtag('consent', 'update', consent);
+  if (w.gtag) {
+    w.gtag('consent', 'update', consent);
+    if (accepted) {
+      // Send page view now that consent is granted
+      w.gtag('config', GA_ID, { page_path: window.location.pathname });
+    }
+  }
   // Block/unblock GA
-  w['ga-disable-G-XXXXXXXXXX'] = !accepted;
+  w[`ga-disable-${GA_ID}`] = !accepted;
   if (!accepted) {
     // Delete GA cookies
     ['_ga','_gid','_gat'].forEach(name => {
@@ -33,20 +40,22 @@ export function CookieBanner() {
   useEffect(() => {
     const stored = localStorage.getItem(KEY);
     if (!stored) {
-      // Default: deny all until user chooses
-      const w = window as any;
-      if (w.gtag) w.gtag('consent', 'default', {
-        analytics_storage:'denied', ad_storage:'denied',
-        ad_user_data:'denied', ad_personalization:'denied',
-      });
       setTimeout(() => setVisible(true), 1200);
     } else {
       applyConsent(stored === 'accepted');
     }
   }, []);
 
-  const accept = () => { localStorage.setItem(KEY,'accepted'); applyConsent(true);  setVisible(false); };
-  const decline= () => { localStorage.setItem(KEY,'declined'); applyConsent(false); setVisible(false); };
+  const accept = () => {
+    localStorage.setItem(KEY, 'accepted');
+    applyConsent(true);
+    setVisible(false);
+  };
+  const decline = () => {
+    localStorage.setItem(KEY, 'declined');
+    applyConsent(false);
+    setVisible(false);
+  };
 
   if (!visible) return null;
 
