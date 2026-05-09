@@ -20,7 +20,21 @@ import { CookieBanner } from './components/layout/CookieBanner';
 import { NewsletterPopup } from './components/marketing/NewsletterPopup';
 
 export default function App() {
+  const isAuthLoading = useAuthStore(s => s.isAuthLoading);
   useAuth();
+
+  React.useEffect(() => {
+    if (!isAuthLoading) {
+      const splash = document.getElementById('rai-boot');
+      if (splash) {
+        splash.style.transition = 'opacity .4s ease';
+        splash.style.opacity = '0';
+        setTimeout(() => splash.remove(), 450);
+      }
+    }
+  }, [isAuthLoading]);
+
+  if (isAuthLoading) return null;
 
   return (
     <div className="app-container">

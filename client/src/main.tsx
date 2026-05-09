@@ -18,11 +18,4 @@ createRoot(rootEl).render(
   </React.StrictMode>
 );
 
-// Remove inline boot shell once React mounts
-if (boot) {
-  requestAnimationFrame(() => {
-    boot.style.transition = 'opacity .3s ease';
-    boot.style.opacity = '0';
-    setTimeout(() => boot.remove(), 320);
-  });
-}
+// Splash removal is handled in App.tsx to sync with auth state
