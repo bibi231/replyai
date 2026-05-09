@@ -33,7 +33,7 @@ export function LemonSqueezyButton({ packId, className }: LemonSqueezyButtonProp
       onClick={handleClick}
       disabled={!pack}
       className={className}
-      variant="outline"
+
     >
       💛 Pay with LemonSqueezy
     </Button>
