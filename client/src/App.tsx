@@ -19,42 +19,6 @@ import { Settings } from './pages/Settings';
 import { CookieBanner } from './components/layout/CookieBanner';
 import { NewsletterPopup } from './components/marketing/NewsletterPopup';
 
-// ── Inline Ad Banner (between content and footer) ─────────
-function InlineAdBanner() {
-  const [adLoaded, setAdLoaded] = React.useState(false);
-
-  React.useEffect(() => {
-    try {
-      const adsbygoogle = (window as any).adsbygoogle = (window as any).adsbygoogle || [];
-      adsbygoogle.push({});
-      setTimeout(() => {
-        const ins = document.querySelector('.inline-ad-banner ins.adsbygoogle') as HTMLElement | null;
-        if (ins && ins.getAttribute('data-ad-status') === 'filled') setAdLoaded(true);
-      }, 2500);
-    } catch(e) {}
-  }, []);
-
-  return (
-    <div className="inline-ad-banner">
-      <ins
-        className="adsbygoogle"
-        style={{ display: 'block' }}
-        data-ad-client="ca-pub-7798519284162823"
-        data-ad-slot="auto"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      />
-      {!adLoaded && (
-        <div className="inline-ad-placeholder">
-          <span>🚀 <strong>Advertise with ReplyAI</strong> — reach thousands of professionals</span>
-          <a href="mailto:peterjohn2343@gmail.com" className="inline-ad-cta">Partner with us</a>
-        </div>
-      )}
-    </div>
-  );
-}
-// ──────────────────────────────────────────────────────────
-
 export default function App() {
   useAuth();
 
@@ -92,7 +56,6 @@ export default function App() {
         </Routes>
       </main>
 
-      <InlineAdBanner />
       <UnifiedFooter />
       <PricingModal />
       <ToastContainer />
