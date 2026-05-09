@@ -150,6 +150,27 @@
       @keyframes rai-boot-spin  { to { transform:rotate(360deg); } }
       @keyframes rai-boot-float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-6px); } }
     </style>
+
+    <!-- Google tag (gtag.js) — GA4 with Consent Mode v2 -->
+    <!-- TODO: Replace G-XXXXXXXXXX with your GA4 Measurement ID from Google Analytics -->
+    <script>
+      // Consent Mode v2 defaults — deny until user accepts cookie banner
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        wait_for_update: 500
+      });
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX', { anonymize_ip: true, send_page_view: false });
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+
+    <!-- Vercel Web Analytics -->
+    <script defer src="/_vercel/insights/script.js"></script>
   </head>
   <body>
     <div id="root">
