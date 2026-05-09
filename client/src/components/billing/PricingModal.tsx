@@ -49,7 +49,7 @@ export function PricingModal() {
                     Pay in ₦ NGN — Debit card, bank transfer, USSD supported
                 </p>
             )}
-            {(gateway === 'gumroad' || gateway === 'lemonsqueezy') && (
+            {(gateway === 'gtsquad' || gateway === 'lemonsqueezy') && (
                 <p className="text-center text-xs text-[var(--text-muted,#666)] mb-6">
                     Pay in USD — Visa, Mastercard, Apple Pay accepted worldwide
                 </p>
@@ -70,7 +70,7 @@ export function PricingModal() {
                                 {gateway === 'paystack' ? (
                                     <span className="text-4xl font-display font-bold">₦{pack.price.toLocaleString()}</span>
                                 ) : (
-                                    <span className="text-4xl font-display font-bold">${pack.priceUsd ?? (pack.price / 1500).toFixed(0)}</span>
+                                    <span className="text-4xl font-display font-bold">${pack.priceUSD ?? (pack.price / 1500).toFixed(0)}</span>
                                 )}
                             </div>
                             <p className="text-[var(--text-secondary)] mt-2 text-sm">{pack.pricePerReply} per reply equivalent</p>
