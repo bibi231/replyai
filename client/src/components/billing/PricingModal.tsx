@@ -111,4 +111,30 @@ export function PricingModal() {
                             </ul>
                         </div>
 
-                     
+                        <div className="mt-auto">
+                            <button
+                                onClick={() => handlePay(pack.id)}
+                                disabled={loadingPack === pack.id}
+                                className={`w-full py-3 px-4 rounded-xl font-semibold text-sm transition-all ${
+                                    pack.popular
+                                        ? 'bg-[var(--accent)] hover:opacity-90 text-white'
+                                        : 'bg-[var(--bg-raised)] hover:bg-[var(--bg-surface)] text-white border border-[var(--border)]'
+                                } disabled:opacity-50`}
+                            >
+                                {loadingPack === pack.id
+                                    ? 'Opening checkout…'
+                                    : gateway === 'gtsquad'
+                                        ? '💳 Pay with GTSquad'
+                                        : '🇳🇬 Pay with Monnify'}
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <p className="text-center text-xs text-[var(--text-muted,#666)] mt-6">
+                🔒 Secure checkout · Credits added automatically after payment
+            </p>
+        </Modal>
+    );
+}

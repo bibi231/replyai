@@ -1,17 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/pricing.css';
 import { Navbar } from '../components/layout/Navbar';
-import { PaystackButton } from '../components/billing/PaystackButton';
-import { FlutterwaveButton } from '../components/billing/FlutterwaveButton';
 import { useCredits } from '../hooks/useCredits';
 import { useAuthStore } from '../store/authStore';
 import { CREDIT_PACKS, detectCurrency } from '../types';
+import { api } from '../lib/api';
 
 export function Pricing() {
   const { credits } = useCredits();
   const user = useAuthStore(s => s.user);
   // Auto-detect: African timezone -> NGN, anywhere else -> USD. User can override.
   const [currency, setCurrency] = useState<'NGN' | 'USD'>(() => detectCurrency());
+  const [loading, setLoading] = useState<string | null>(null);
+
+  const handleCheckout = async (packId: string) => {
+    if (!user) { window.location.href = '/app'; return; }
+    setLoading(packId);
+    try {
+      const endpoint = currency === 'NGN' ? '/api/credits/gtsquad-checkout' : '/api/credits/lemonsqueezy-checkout';
+      const { data } = await api.post(endpoint, { packId });
+      if (data.checkoutUrl) window.open(data.checkoutUrl, '_blank', 'noopener');
+    } catch (err) {
+      console.error('Checkout error', err);
+      alert('Could not open checkout. Please try again.');
+    } finally {
+      setLoading(null);
+    }
+  };
 
   // Persist explicit user toggle so it survives reload
   useEffect(() => {
@@ -79,11 +94,14 @@ export function Pricing() {
               </ul>
               <div className="pricing-card-footer">
                 {user ? (
-                  currency === 'NGN' ? (
-                    <PaystackButton packId={pack.id} className="w-full" />
-                  ) : (
-                    <FlutterwaveButton packId={pack.id} className="w-full" />
-                  )
+                  <button
+                    className="pricing-buy-btn"
+                    onClick={() => handleCheckout(pack.id)}
+                    disabled={loading === pack.id}
+                    style={{ width: '100%', padding: '12px', borderRadius: '8px', fontWeight: 700, fontSize: 15, cursor: 'pointer', background: pack.popular ? '#6366f1' : '#23283a', color: '#fff', border: 'none', opacity: loading === pack.id ? 0.7 : 1 }}
+                  >
+                    {loading === pack.id ? 'Opening checkout…' : currency === 'NGN' ? `Buy ₦${pack.price.toLocaleString()}` : `Buy $${pack.priceUSD}`}
+                  </button>
                 ) : (
                   <a href="/app" className="pricing-signin-cta">Sign in to purchase</a>
                 )}
@@ -97,7 +115,7 @@ export function Pricing() {
           {[
             { q: 'Do credits expire?', a: 'Paid credits never expire. Free credits reset on the 1st of every month.' },
             { q: 'What counts as 1 credit?', a: '1 credit = 1 generation = 3 complete reply drafts delivered simultaneously.' },
-            { q: 'What payment methods work?', a: 'We use Paystack for NGN (Visa, Mastercard, Bank Transfer) and Flutterwave for USD (International Cards, Apple Pay, Google Pay).' },
+            { q: 'What payment methods work?', a: 'NGN payments go through GTSquad (Visa, Mastercard, USSD, bank transfer). USD payments go through Lemon Squeezy (international cards, PayPal).' },
             { q: 'Can I use it on mobile?', a: 'The web dashboard works on any device. The Gmail extension requires Chrome on desktop.' },
           ].map(item => (
             <div key={item.q} className="faq-item">
