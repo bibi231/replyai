@@ -9,6 +9,7 @@ import { UnifiedFooter } from './components/layout/UnifiedFooter';
 import { PricingModal } from './components/billing/PricingModal';
 import { ToastContainer } from './components/ui/Toast';
 import { useAuth } from './hooks/useAuth';
+import { useAuthStore } from './store/authStore';
 
 import { Privacy } from './pages/Privacy';
 import { Terms } from './pages/Terms';
@@ -73,8 +74,4 @@ export default function App() {
       <UnifiedFooter />
       <PricingModal />
       <ToastContainer />
-      <CookieBanner />
-      <NewsletterPopup />
-    </div>
-  );
-}
+      <CookieBann
