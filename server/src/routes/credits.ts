@@ -98,4 +98,4 @@ router.post('/verify', verifyFirebaseToken, async (req: any, res: any, next: any
     }
 });
 
-export default router;
+// ── Squad (GTSqua

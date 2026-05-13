@@ -2,21 +2,38 @@ import React, { useState } from 'react';
 import { Modal } from '../ui/Modal';
 import { useAuthStore } from '../../store/authStore';
 import { CREDIT_PACKS } from '../../types';
-import { PaystackButton } from './PaystackButton';
-import { GTSquadButton } from './GTSquadButton';
-import { LemonSqueezyButton } from './LemonSqueezyButton';
+import { api } from '../../lib/api';
 
-type PayGateway = 'paystack' | 'gtsquad' | 'lemonsqueezy';
+type Gateway = 'monnify' | 'gtsquad';
 
 export function PricingModal() {
-    const { isPricingOpen, closePricing } = useAuthStore();
-    const [gateway, setGateway] = useState<PayGateway>('paystack');
+    const { isPricingOpen, closePricing, user } = useAuthStore();
+    const [gateway, setGateway] = useState<Gateway>('gtsquad');
+    const [loadingPack, setLoadingPack] = useState<string | null>(null);
+    const [error, setError] = useState('');
 
-    const GATEWAYS: { id: PayGateway; label: string; sub: string; flag: string }[] = [
-        { id: 'paystack',     label: 'Paystack',      sub: 'NGN · Card/Transfer',   flag: '🇳🇬' },
-        { id: 'gtsquad',      label: 'GTSquad',        sub: 'Card worldwide',        flag: '💳' },
-        { id: 'lemonsqueezy', label: 'LemonSqueezy',  sub: 'USD · Card worldwide',  flag: '💛' },
+    const GATEWAYS = [
+        { id: 'gtsquad' as Gateway,  label: 'GTSquad',  sub: 'USD · Intl Card', flag: '💳' },
+        { id: 'monnify' as Gateway,  label: 'Monnify',  sub: 'NGN · Bank/Card', flag: '🇳🇬' },
     ];
+
+    const handlePay = async (packId: string) => {
+        if (!user?.email) return;
+        setLoadingPack(packId);
+        setError('');
+        try {
+            const endpoint = gateway === 'gtsquad'
+                ? '/api/credits/gtsquad-checkout'
+                : '/api/credits/monnify-checkout';
+            const { data } = await api.post(endpoint, { packId, email: user.email });
+            window.open(data.checkoutUrl, '_blank', 'noopener');
+            closePricing();
+        } catch (err: any) {
+            setError(err?.response?.data?.message || 'Could not start checkout. Please try again.');
+        } finally {
+            setLoadingPack(null);
+        }
+    };
 
     return (
         <Modal isOpen={isPricingOpen} onClose={closePricing} maxWidth="max-w-4xl">
@@ -44,15 +61,16 @@ export function PricingModal() {
                 ))}
             </div>
 
-            {gateway === 'paystack' && (
-                <p className="text-center text-xs text-[var(--text-muted,#666)] mb-6">
-                    Pay in ₦ NGN — Debit card, bank transfer, USSD supported
-                </p>
-            )}
-            {(gateway === 'gtsquad' || gateway === 'lemonsqueezy') && (
-                <p className="text-center text-xs text-[var(--text-muted,#666)] mb-6">
-                    Pay in USD — Visa, Mastercard, Apple Pay accepted worldwide
-                </p>
+            <p className="text-center text-xs text-[var(--text-muted,#666)] mb-6">
+                {gateway === 'gtsquad'
+                    ? 'Pay in USD — Visa, Mastercard, international cards accepted'
+                    : 'Pay in NGN — Bank transfer, Debit card, USSD supported'}
+            </p>
+
+            {error && (
+                <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm text-center">
+                    {error}
+                </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -67,10 +85,10 @@ export function PricingModal() {
                         <div className="mb-6">
                             <h3 className="text-lg font-medium text-white mb-2">{pack.name}</h3>
                             <div className="flex items-baseline gap-1">
-                                {gateway === 'paystack' ? (
+                                {gateway === 'monnify' ? (
                                     <span className="text-4xl font-display font-bold">₦{pack.price.toLocaleString()}</span>
                                 ) : (
-                                    <span className="text-4xl font-display font-bold">${pack.priceUSD ?? (pack.price / 1500).toFixed(0)}</span>
+                                    <span className="text-4xl font-display font-bold">${pack.priceUSD}</span>
                                 )}
                             </div>
                             <p className="text-[var(--text-secondary)] mt-2 text-sm">{pack.pricePerReply} per reply equivalent</p>
@@ -93,14 +111,4 @@ export function PricingModal() {
                             </ul>
                         </div>
 
-                        <div className="mt-auto">
-                            {gateway === 'paystack' && <PaystackButton packId={pack.id as any} />}
-                            {gateway === 'gtsquad' && <GTSquadButton packId={pack.id as any} />}
-                            {gateway === 'lemonsqueezy' && <LemonSqueezyButton packId={pack.id as any} />}
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </Modal>
-    );
-}
+                     
