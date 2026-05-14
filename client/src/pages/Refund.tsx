@@ -27,12 +27,12 @@ export function Refund() {
 
                 <section>
                     <h2>3. How to Request a Refund</h2>
-                    <p>To request a refund, email <b>support@trueweb.tech</b> with your transaction reference from Paystack. Requests must be made within 7 days of the transaction.</p>
+                    <p>To request a refund, email <b>support@trueweb.tech</b> with your transaction reference from GTSquad. Requests must be made within 7 days of the transaction.</p>
                 </section>
 
                 <section>
                     <h2>4. Processing</h2>
-                    <p>Approved refunds will be processed via Paystack back to the original payment method. Processing times vary by bank but usually take 5-10 business days.</p>
+                    <p>Approved refunds will be processed via GTSquad back to the original payment method. Processing times vary by bank but usually take 5-10 business days.</p>
                 </section>
 
                 <div style={{ marginTop: '40px' }}>

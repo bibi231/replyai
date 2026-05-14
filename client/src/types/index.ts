@@ -40,9 +40,8 @@ export interface CreditPack {
 }
 
 /**
- * NGN: localised pricing for Nigerian users (Paystack)
- * USD: still well below US-market norms but priced for sustainable global revenue (Flutterwave)
- *      e.g. Starter 30 credits → $5 (~₦7,500 effective) vs ₦1,500 local
+ * NGN and USD: both handled by GTSquad checkout
+ * e.g. Starter 30 credits → $5 / ₦1,500
  */
 export const CREDIT_PACKS: CreditPack[] = [
     {

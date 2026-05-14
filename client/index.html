@@ -99,28 +99,38 @@
     }
     </script>
 
-    <!-- Google AdSense (Commented to avoid blank banners)
+    <!-- Google AdSense (pending approval)
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7798519284162823" crossorigin="anonymous"></script>
     -->
 
-    <!-- Media.net Ads (Commented placeholders)
-    <script>try{window._mNHandle=window._mNHandle||{};window._mNHandle.queue=window._mNHandle.queue||[];window._mNDetails=window._mNDetails||{};window._mNDetails.loadTag=window._mNDetails.loadTag||function(){for(var a=arguments,b=this._h,c=this._h=[],d=0;d<b.length;d++)c.push(b[d]);c.push(a)};window._mNDetails.loadTag.apply(window._mNDetails,["YOUR_MEDIANET_AD_SLOT","100%","auto"]);}catch(e){}</script>
-    <script async src="//contextual.media.net/dmedianet.js?cid=XXXXXXXX" crossorigin="anonymous"></script>
+    <!-- ═══════════════════════════════════════════════════════════════
+         ALTERNATIVE AD NETWORKS — activate by replacing placeholders
+         ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- PropellerAds — sign up: propellerads.com → Sites → Add site → get zone script
+         Replace PROPELLER_ZONE_ID with your zone ID, then uncomment.
+    <script async src="https://hbstatic.net/natush.min.js" data-cfasync="false"></script>
+    <script>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('outor.net',PROPELLER_ZONE_ID,document.createElement('script'))</script>
     -->
-    <!-- End Media.net -->
-    <!-- ═══════════════════════════════════════════════════
-         Ezoic Ads
-         TODO: Replace YOUR_EZOIC_PUBLISHER_ID with your Ezoic site ID
-         Get it from: https://publisher.ezoic.com → Settings → Ezoic Code
-         Option A — Ezoic Cloud Integration (recommended, no code needed)
-         Option B — Paste their head script below:
-         ═══════════════════════════════════════════════════ -->
+
+    <!-- Adsterra — sign up: adsterra.com → Publisher → Add site → get site key
+         Replace ADSTERRA_KEY with your site key, then uncomment.
+    <script async data-cfasync="false" src="//pl24ADSTERRA_KEY.profitableratecpm.com/ADSTERRA_KEY/invoke.js"></script>
+    -->
+
+    <!-- Media.net — sign up: media.net → Publisher → get CID
+         Replace MEDIA_NET_CID with your publisher CID, then uncomment.
+    <script async src="//contextual.media.net/dmedianet.js?cid=MEDIA_NET_CID" crossorigin="anonymous"></script>
+    -->
+
+    <!-- Carbon Ads — apply: carbonads.com (approval required, ~3 days for tech sites)
+         Replace CARBON_SERVE and CARBON_PLACEMENT with your values, then uncomment.
+    <script async src="//cdn.carbonads.com/carbon.js?serve=CARBON_SERVE&placement=CARBON_PLACEMENT" id="_carbonads_js"></script>
+    -->
     <!-- <script async src="//www.ezojs.com/ezoic/sa.min.js?pub=YOUR_EZOIC_PUBLISHER_ID"></script> -->
     <!-- End Ezoic -->
 
-    <!-- Payment gateways (deferred so they don't block first paint) -->
-    <script defer src="https://js.paystack.co/v1/inline.js"></script>
-    <script defer src="https://checkout.flutterwave.com/v3.js"></script>
+    <!-- Payment gateways handled server-side via Squad/Monnify hosted links -->
 
     <style>
       html, body { background:#0b0d14; color:#e2e8f0; margin:0; padding:0; min-height:100%; overflow-x:hidden;

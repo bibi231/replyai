@@ -2,21 +2,27 @@ import React, { useState } from 'react';
 import { Modal } from '../ui/Modal';
 import { useAuthStore } from '../../store/authStore';
 import { CREDIT_PACKS } from '../../types';
-import { PaystackButton } from './PaystackButton';
-import { GTSquadButton } from './GTSquadButton';
-import { LemonSqueezyButton } from './LemonSqueezyButton';
-
-type PayGateway = 'paystack' | 'gtsquad' | 'lemonsqueezy';
+import { api } from '../../lib/api';
 
 export function PricingModal() {
-    const { isPricingOpen, closePricing } = useAuthStore();
-    const [gateway, setGateway] = useState<PayGateway>('paystack');
+    const { isPricingOpen, closePricing, user } = useAuthStore();
+    const [loadingPack, setLoadingPack] = useState<string | null>(null);
+    const [error, setError] = useState('');
 
-    const GATEWAYS: { id: PayGateway; label: string; sub: string; flag: string }[] = [
-        { id: 'paystack',     label: 'Paystack',      sub: 'NGN · Card/Transfer',   flag: '🇳🇬' },
-        { id: 'gtsquad',      label: 'GTSquad',        sub: 'Card worldwide',        flag: '💳' },
-        { id: 'lemonsqueezy', label: 'LemonSqueezy',  sub: 'USD · Card worldwide',  flag: '💛' },
-    ];
+    const handlePay = async (packId: string) => {
+        if (!user?.email) return;
+        setLoadingPack(packId);
+        setError('');
+        try {
+            const { data } = await api.post('/api/credits/gtsquad-checkout', { packId, email: user.email });
+            window.open(data.checkoutUrl, '_blank', 'noopener');
+            closePricing();
+        } catch (err: any) {
+            setError(err?.response?.data?.message || 'Could not start checkout. Please try again.');
+        } finally {
+            setLoadingPack(null);
+        }
+    };
 
     return (
         <Modal isOpen={isPricingOpen} onClose={closePricing} maxWidth="max-w-4xl">
@@ -25,34 +31,14 @@ export function PricingModal() {
                 <p className="text-[var(--text-secondary)]">Buy credits once, use them forever. 1 credit = 3 reply drafts.</p>
             </div>
 
-            {/* Payment gateway selector */}
-            <div className="flex gap-2 mb-8 p-1 bg-[var(--bg-raised,#1a1a2e)] rounded-xl border border-[var(--border)]">
-                {GATEWAYS.map(g => (
-                    <button
-                        key={g.id}
-                        onClick={() => setGateway(g.id)}
-                        className={`flex-1 flex flex-col items-center py-3 px-2 rounded-lg text-center transition-all text-sm font-medium ${
-                            gateway === g.id
-                                ? 'bg-[var(--accent)] text-white shadow'
-                                : 'text-[var(--text-secondary)] hover:text-white'
-                        }`}
-                    >
-                        <span className="text-lg mb-0.5">{g.flag}</span>
-                        <span className="font-semibold text-xs">{g.label}</span>
-                        <span className="text-[10px] opacity-70 mt-0.5">{g.sub}</span>
-                    </button>
-                ))}
-            </div>
+            <p className="text-center text-xs text-[var(--text-muted,#666)] mb-6">
+                Pay in USD or NGN — Visa, Mastercard, Bank transfer, USSD supported via GTSquad
+            </p>
 
-            {gateway === 'paystack' && (
-                <p className="text-center text-xs text-[var(--text-muted,#666)] mb-6">
-                    Pay in ₦ NGN — Debit card, bank transfer, USSD supported
-                </p>
-            )}
-            {(gateway === 'gtsquad' || gateway === 'lemonsqueezy') && (
-                <p className="text-center text-xs text-[var(--text-muted,#666)] mb-6">
-                    Pay in USD — Visa, Mastercard, Apple Pay accepted worldwide
-                </p>
+            {error && (
+                <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm text-center">
+                    {error}
+                </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -66,12 +52,9 @@ export function PricingModal() {
 
                         <div className="mb-6">
                             <h3 className="text-lg font-medium text-white mb-2">{pack.name}</h3>
-                            <div className="flex items-baseline gap-1">
-                                {gateway === 'paystack' ? (
-                                    <span className="text-4xl font-display font-bold">₦{pack.price.toLocaleString()}</span>
-                                ) : (
-                                    <span className="text-4xl font-display font-bold">${pack.priceUSD ?? (pack.price / 1500).toFixed(0)}</span>
-                                )}
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-4xl font-display font-bold">${pack.priceUSD}</span>
+                                <span className="text-sm text-[var(--text-secondary)]">/ ₦{pack.price.toLocaleString()}</span>
                             </div>
                             <p className="text-[var(--text-secondary)] mt-2 text-sm">{pack.pricePerReply} per reply equivalent</p>
                         </div>
@@ -94,13 +77,25 @@ export function PricingModal() {
                         </div>
 
                         <div className="mt-auto">
-                            {gateway === 'paystack' && <PaystackButton packId={pack.id as any} />}
-                            {gateway === 'gtsquad' && <GTSquadButton packId={pack.id as any} />}
-                            {gateway === 'lemonsqueezy' && <LemonSqueezyButton packId={pack.id as any} />}
+                            <button
+                                onClick={() => handlePay(pack.id)}
+                                disabled={loadingPack === pack.id}
+                                className={`w-full py-3 px-4 rounded-xl font-semibold text-sm transition-all ${
+                                    pack.popular
+                                        ? 'bg-[var(--accent)] hover:opacity-90 text-white'
+                                        : 'bg-[var(--bg-raised)] hover:bg-[var(--bg-surface)] text-white border border-[var(--border)]'
+                                } disabled:opacity-50`}
+                            >
+                                {loadingPack === pack.id ? 'Opening checkout…' : '💳 Pay with GTSquad'}
+                            </button>
                         </div>
                     </div>
                 ))}
             </div>
+
+            <p className="text-center text-xs text-[var(--text-muted,#666)] mt-6">
+                🔒 Secure checkout · Credits added automatically after payment
+            </p>
         </Modal>
     );
 }

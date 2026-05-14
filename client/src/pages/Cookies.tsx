@@ -32,7 +32,7 @@ export function Cookies() {
 
                 <section>
                     <h2>4. Third-Party Cookies</h2>
-                    <p>We use third-party services like Firebase (Auth) and Paystack (Payments) which may set their own cookies to ensure security and prevent fraud.</p>
+                    <p>We use third-party services like Firebase (Auth) and GTSquad (Payments) which may set their own cookies to ensure security and prevent fraud.</p>
                 </section>
 
                 <div style={{ marginTop: '40px' }}>

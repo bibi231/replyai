@@ -6,7 +6,7 @@ ReplyAI is an AI-powered email reply generator SaaS for Nigerian professionals. 
 - **Instant Drafts:** Generates 3 reply drafts per request, tailored to varying depths.
 - **Smart Tones:** Select from Professional, Friendly, Firm, Apologetic, or provide a Custom context.
 - **Auth & Usage:** Google/Email auth via Firebase. Everyone gets 5 free drafts monthly.
-- **Billing:** Buy Pay-As-You-Go credit packs via Paystack (NGN).
+- **Billing:** Buy Pay-As-You-Go credit packs via GTSquad (USD and NGN).
 - **History:** View past generations from your Dashboard.
 
 ## Local Setup
@@ -23,7 +23,7 @@ Copy `.env.example` to `.env` at the root, and configure your keys.
 
 - **Gemini:** [console.cloud.google.com](https://console.cloud.google.com) → Enable Generative AI API → Create API key
 - **Firebase:** [console.firebase.google.com](https://console.firebase.google.com) → Project settings → Service accounts → Generate key (paste JSON string into `FIREBASE_SERVICE_ACCOUNT_JSON`)
-- **Paystack:** [dashboard.paystack.com](https://dashboard.paystack.com) → Settings → API keys
+- **GTSquad:** [dashboard.squadco.com](https://dashboard.squadco.com) → API keys
 - **Neon Postgres:** [neon.tech](https://neon.tech) → New project → Copy `DATABASE_URL`
 
 ### 3. Database

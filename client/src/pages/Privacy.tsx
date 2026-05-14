@@ -40,7 +40,7 @@ export function Privacy() {
                     <p>We use your data strictly to:</p>
                     <ul>
                         <li>Generate AI drafts using secure API calls.</li>
-                        <li>Manage your credit balance and subscription status via Paystack.</li>
+                        <li>Manage your credit balance and subscription status via GTSquad.</li>
                         <li>Improve the relevance of our AI models through anonymized aggregate data.</li>
                     </ul>
                     <p><b>We do not sell your personal data to advertisers or third parties.</b></p>

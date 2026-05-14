@@ -31,7 +31,7 @@ export function Terms() {
                     <ul>
                         <li>Free users receive a limited quota of monthly credits.</li>
                         <li>Paid credits are purchased as bundles and do not expire.</li>
-                        <li>We use Paystack to process payments. You agree to their terms and conditions upon purchase.</li>
+                        <li>We use GTSquad to process payments. You agree to their terms and conditions upon purchase.</li>
                     </ul>
                 </section>
 
