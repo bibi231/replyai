@@ -7,10 +7,16 @@ export function Navbar() {
     const user = useAuthStore(s => s.user);
     const credits = useAuthStore(s => s.credits);
     const { pathname } = useLocation();
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
     const freeLeft = credits?.free ?? 0;
     const paidLeft = credits?.paid ?? 0;
     const hasCredits = freeLeft > 0 || paidLeft > 0;
+
+    // Close menu on navigation
+    React.useEffect(() => {
+        setIsMenuOpen(false);
+    }, [pathname]);
 
     return (
         <nav className="navbar">
@@ -22,7 +28,21 @@ export function Navbar() {
                     ReplyAI
                 </Link>
 
-                <div className="navbar-right">
+                <button 
+                    className="navbar-hamburger" 
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    aria-label="Toggle menu"
+                >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        {isMenuOpen ? (
+                            <path d="M18 6L6 18M6 6l12 12" />
+                        ) : (
+                            <path d="M3 12h18M3 6h18M3 18h18" />
+                        )}
+                    </svg>
+                </button>
+
+                <div className={`navbar-right ${isMenuOpen ? 'menu-open' : ''}`}>
                     {user && credits && (
                         <Link to="/pricing" className={`credits-badge-link ${!hasCredits ? 'empty' : freeLeft > 0 ? 'free' : 'paid'}`}>
                             <span className={`credits-badge-dot ${!hasCredits ? 'pulse-red' : ''}`} />
