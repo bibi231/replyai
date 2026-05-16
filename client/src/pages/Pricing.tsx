@@ -17,13 +17,33 @@ export function Pricing() {
     if (!user) { window.location.href = '/app'; return; }
     setLoading(packId);
     try {
-      const endpoint = currency === 'NGN' ? '/api/credits/gtsquad-checkout' : '/api/credits/lemonsqueezy-checkout';
-      const { data } = await api.post(endpoint, { packId });
+      // GTSquad inline popup (NGN + USD). Lemon Squeezy overlay for USD-only fallback.
+      const { data } = await api.post('/api/credits/gtsquad-checkout', { packId, currency });
+      if (data.mode === 'inline' && (window as any).Squad) {
+        const squad = new (window as any).Squad({
+          key: data.publicKey,
+          email: data.email,
+          amount: data.amount,
+          currency_code: data.currency,
+          transaction_ref: data.transactionRef,
+          customer_name: data.customerName,
+          metadata: data.metadata,
+          onClose: () => setLoading(null),
+          onSuccess: () => {
+            window.dispatchEvent(new Event('credits:refresh'));
+            setLoading(null);
+            alert('Payment successful! Credits added.');
+          },
+        });
+        squad.setup();
+        squad.open();
+        return;
+      }
       if (data.checkoutUrl) window.open(data.checkoutUrl, '_blank', 'noopener');
-    } catch (err) {
+      setLoading(null);
+    } catch (err: any) {
       console.error('Checkout error', err);
-      alert('Could not open checkout. Please try again.');
-    } finally {
+      alert(err?.response?.data?.message || 'Could not open checkout. Please try again.');
       setLoading(null);
     }
   };
