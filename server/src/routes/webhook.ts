@@ -7,25 +7,38 @@ import crypto from 'crypto';
 const router = Router();
 
 // ── GTSquad webhook ───────────────────────────────────────────────────────────
+// Docs: https://docs.squadco.com — header is x-squad-encrypted-body,
+// algorithm is HMAC-SHA512, hex output uppercased.
 router.post('/gtsquad', async (req: any, res: any) => {
     try {
         const secret = process.env.GTSQUAD_SECRET_KEY || '';
         const rawBody = JSON.stringify(req.body);
         const expected = crypto
-            .createHmac('sha256', secret)
+            .createHmac('sha512', secret)
             .update(rawBody)
-            .digest('hex');
-        const received = (req.headers['x-gtsquad-signature'] || '') as string;
+            .digest('hex')
+            .toUpperCase();
+        const received = ((req.headers['x-squad-encrypted-body'] || '') as string).toUpperCase();
+
         if (!secret || received !== expected) {
             logger.warn('GTSquad: Invalid webhook signature');
             return res.status(401).send('Invalid signature');
         }
 
-        const { event, data } = req.body;
-        if (event === 'payment.completed' && data?.status === 'success') {
-            const reference = data.reference;
-            const packId    = data.metadata?.packId as string | undefined;
-            const email     = data.customer?.email as string | undefined;
+        const { Body: body } = req.body;
+        // Squad wraps the payload in { Event, Body }
+        const event = req.body.Event || req.body.event;
+        const data = body || req.body.data || req.body;
+
+        if (
+            (event === 'charge_successful' || event === 'payment.completed') &&
+            (data?.gateway_response === 'Successful' || data?.status === 'success' || data?.transaction_status === 'success')
+        ) {
+            const reference = data.transaction_ref || data.reference;
+            // metadata sent from the inline widget: { pack: 'starter', userId: '...', credits: 30 }
+            const meta = data.meta || data.metadata || {};
+            const packId = meta.pack || meta.packId;
+            const email = data.email || data.customer_email || data.customer?.email;
 
             if (!reference || !packId || !email) {
                 logger.warn('GTSquad: Missing reference/packId/email in payload', data);
@@ -40,11 +53,12 @@ router.post('/gtsquad', async (req: any, res: any) => {
                 return res.status(200).send('OK');
             }
 
-            const PACK_CREDITS: Record<string, number> = { starter: 100, pro: 300, power: 1000 };
-            const credits = PACK_CREDITS[packId] ?? 100;
+            // ReplyAI packs: starter=30, pro=100, power=300
+            const PACK_CREDITS: Record<string, number> = { starter: 30, pro: 100, power: 300 };
+            const credits = PACK_CREDITS[packId] ?? 30;
 
             await addPaidCredits(user.id, credits, reference, packId, data.amount ?? 0);
-            logger.info(`GTSquad: Added ${credits} credits to ${email}`);
+            logger.info(`GTSquad: Added ${credits} credits to ${email} (pack=${packId})`);
         }
 
         return res.status(200).send('OK');
@@ -88,9 +102,9 @@ router.post('/monnify', async (req: any, res: any) => {
             }
 
             const AMOUNT_TO_PACK: Array<{ min: number; pack: string; credits: number }> = [
-                { min: 15000, pack: 'power',   credits: 1000 },
-                { min: 5000,  pack: 'pro',     credits: 300  },
-                { min: 0,     pack: 'starter', credits: 100  },
+                { min: 15000, pack: 'power',   credits: 300  },
+                { min: 5000,  pack: 'pro',     credits: 100  },
+                { min: 0,     pack: 'starter', credits: 30   },
             ];
             const bucket = AMOUNT_TO_PACK.find(b => amountPaid >= b.min) ?? AMOUNT_TO_PACK[2];
             await addPaidCredits(user.id, bucket.credits, reference, bucket.pack, amountPaid);
