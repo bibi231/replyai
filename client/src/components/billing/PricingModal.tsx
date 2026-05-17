@@ -34,30 +34,11 @@ export function PricingModal() {
                 setLoadingPack(null);
                 return;
             }
-            // Default: Squad inline popup
             const { data } = await api.post('/api/credits/gtsquad-checkout', { packId, currency });
-            if (!window.Squad) {
-                setError('Payment widget failed to load. Please refresh the page.');
-                setLoadingPack(null);
+            if (data.checkoutUrl) {
+                window.location.href = data.checkoutUrl;
                 return;
             }
-            const squad = new window.Squad({
-                key: data.publicKey,
-                email: data.email,
-                amount: data.amount,
-                currency_code: data.currency,
-                transaction_ref: data.transactionRef,
-                customer_name: data.customerName,
-                metadata: data.metadata,
-                onClose: () => setLoadingPack(null),
-                onSuccess: () => {
-                    window.dispatchEvent(new Event('credits:refresh'));
-                    closePricing();
-                    setLoadingPack(null);
-                },
-            });
-            squad.setup();
-            squad.open();
         } catch (err: any) {
             setError(err?.response?.data?.message || 'Could not start checkout. Please try again.');
             setLoadingPack(null);
