@@ -1,4 +1,4 @@
-import { pgTable, varchar, text, integer, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, varchar, text, integer, timestamp, uuid, jsonb } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
     id: varchar('id', { length: 128 }).primaryKey(),
@@ -11,7 +11,7 @@ export const users = pgTable('users', {
     totalGenerations: integer('total_generations').default(0),
     defaultTone: varchar('default_tone', { length: 50 }).default('professional'),
     defaultLanguage: varchar('default_language', { length: 20 }).default('en'),
-    showTips: integer('show_tips').default(1), 
+    showTips: integer('show_tips').default(1),
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at').defaultNow(),
 });
@@ -36,6 +36,29 @@ export const replyTemplates = pgTable('reply_templates', {
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at').defaultNow(),
 });
+
+export const meetings = pgTable('meetings', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: varchar('user_id', { length: 128 }).references(() => users.id).notNull(),
+    title: varchar('title', { length: 500 }).notNull(),
+    date: timestamp('date').notNull(),
+    rawNotes: text('raw_notes').notNull(),
+    summary: text('summary'),
+    actionItems: jsonb('action_items').$type<ActionItem[]>().default([]),
+    tags: jsonb('tags').$type<string[]>().default([]),
+    status: varchar('status', { length: 20 }).default('draft'),
+    createdAt: timestamp('created_at').defaultNow(),
+    updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+export interface ActionItem {
+    id: string;
+    text: string;
+    assignee: string;
+    dueDate?: string;
+    status: 'pending' | 'in_progress' | 'done';
+    priority: 'low' | 'medium' | 'high';
+}
 
 export const payments = pgTable('payments', {
     id: uuid('id').primaryKey().defaultRandom(),

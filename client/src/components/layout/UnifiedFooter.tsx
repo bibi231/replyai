@@ -53,10 +53,11 @@ export function UnifiedFooter() {
           <div className="rai-footer-col">
             <h4 className="rai-footer-h">Product</h4>
             <ul className="rai-footer-links">
+              <li><Link to="/features">Features</Link></li>
               <li><Link to="/app">Reply Generator</Link></li>
+              <li><Link to="/meetings">Meeting Notes</Link></li>
               <li><Link to="/dashboard">Dashboard</Link></li>
               <li><Link to="/pricing">Pricing</Link></li>
-              <li><Link to="/settings">Settings</Link></li>
             </ul>
           </div>
 
@@ -75,7 +76,8 @@ export function UnifiedFooter() {
           <div className="rai-footer-col">
             <h4 className="rai-footer-h">Support</h4>
             <ul className="rai-footer-links">
-              <li><a href="mailto:support@replyai.com.ng">Help</a></li>
+              <li><Link to="/faq">Help Center</Link></li>
+              <li><Link to="/about">About</Link></li>
               <li><a href="mailto:hello@replyai.com.ng">Contact</a></li>
               <li>
                 <button

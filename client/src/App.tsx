@@ -16,6 +16,12 @@ import { Terms } from './pages/Terms';
 import { Refund } from './pages/Refund';
 import { Cookies } from './pages/Cookies';
 import { Settings } from './pages/Settings';
+import { Meetings } from './pages/Meetings';
+import { MeetingDetail } from './pages/MeetingDetail';
+import { FeatureMeetings } from './pages/FeatureMeetings';
+import { Features } from './pages/Features';
+import { About } from './pages/About';
+import { FAQ } from './pages/FAQ';
 
 import { CookieBanner } from './components/layout/CookieBanner';
 import { NewsletterPopup } from './components/marketing/NewsletterPopup';
@@ -43,31 +49,29 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/features" element={<Features />} />
+          <Route path="/features/meetings" element={<FeatureMeetings />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/faq" element={<FAQ />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/refund" element={<Refund />} />
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/settings" element={
-            <AuthGuard>
-              <Settings />
-            </AuthGuard>
+            <AuthGuard><Settings /></AuthGuard>
           } />
-          <Route
-            path="/app"
-            element={
-              <AuthGuard>
-                <AppPage />
-              </AuthGuard>
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <AuthGuard>
-                <Dashboard />
-              </AuthGuard>
-            }
-          />
+          <Route path="/app" element={
+            <AuthGuard><AppPage /></AuthGuard>
+          } />
+          <Route path="/meetings" element={
+            <AuthGuard><Meetings /></AuthGuard>
+          } />
+          <Route path="/meetings/:id" element={
+            <AuthGuard><MeetingDetail /></AuthGuard>
+          } />
+          <Route path="/dashboard" element={
+            <AuthGuard><Dashboard /></AuthGuard>
+          } />
         </Routes>
       </main>
 

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Navbar } from '../components/layout/Navbar';
 import { Spinner } from '../components/ui/Spinner';
 import { Badge } from '../components/ui/Badge';
+import { Link } from 'react-router-dom';
 import { api } from '../lib/api';
-import { ReplyTemplate } from '../types';
+import { ReplyTemplate, MeetingStats, Meeting } from '../types';
 
 interface GenerationRecord {
     id: string;
@@ -24,7 +25,9 @@ export function Dashboard() {
     const [history, setHistory] = useState<GenerationRecord[]>([]);
     const [templates, setTemplates] = useState<ReplyTemplate[]>([]);
     const [stats, setStats] = useState<Stats | null>(null);
-    const [activeTab, setActiveTab] = useState<'replies' | 'templates'>('replies');
+    const [meetingStats, setMeetingStats] = useState<MeetingStats | null>(null);
+    const [recentMeetings, setRecentMeetings] = useState<Meeting[]>([]);
+    const [activeTab, setActiveTab] = useState<'replies' | 'templates' | 'meetings'>('replies');
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -33,14 +36,18 @@ export function Dashboard() {
         setIsLoading(true);
         setError(null);
         try {
-            const [histRes, tempRes, statsRes] = await Promise.all([
+            const [histRes, tempRes, statsRes, mStatsRes, mListRes] = await Promise.all([
                 api.get('/api/reply/history'),
                 api.get('/api/templates'),
-                api.get('/api/reply/stats')
+                api.get('/api/reply/stats'),
+                api.get('/api/meetings/stats/summary').catch(() => ({ data: null })),
+                api.get('/api/meetings').catch(() => ({ data: { meetings: [] } })),
             ]);
             setHistory(histRes.data);
             setTemplates(tempRes.data);
             setStats(statsRes.data);
+            if (mStatsRes.data) setMeetingStats(mStatsRes.data);
+            setRecentMeetings((mListRes.data.meetings || []).slice(0, 5));
         } catch (err: any) {
             console.error('[Dashboard] fetch error:', err?.response?.status, err?.message);
             setError('Failed to load dashboard data. Check your connection and try again.');
@@ -97,6 +104,12 @@ export function Dashboard() {
                             <span className="stat-label">Templates</span>
                             <span className="stat-value">{templates.length}</span>
                         </div>
+                        {meetingStats && (
+                            <div className="stat-card">
+                                <span className="stat-label">Meetings</span>
+                                <span className="stat-value">{meetingStats.totalMeetings}</span>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -108,11 +121,17 @@ export function Dashboard() {
                     >
                         Recent Replies
                     </button>
-                    <button 
+                    <button
                         className={`dashboard-tab ${activeTab === 'templates' ? 'active' : ''}`}
                         onClick={() => setActiveTab('templates')}
                     >
                         My Templates ({templates.length})
+                    </button>
+                    <button
+                        className={`dashboard-tab ${activeTab === 'meetings' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('meetings')}
+                    >
+                        Recent Meetings ({recentMeetings.length})
                     </button>
                 </div>
 
@@ -213,6 +232,27 @@ export function Dashboard() {
                             ))
                         )}
                     </div>
+                ) : !error && activeTab === 'meetings' ? (
+                    recentMeetings.length === 0 ? (
+                        <div className="empty-state" style={{ minHeight: 300 }}>
+                            <h3 className="empty-state-title">No meetings yet</h3>
+                            <p className="empty-state-sub">Create your first meeting to see it here.</p>
+                            <Link to="/meetings" style={{ marginTop: 16, display: 'inline-block', padding: '10px 24px', background: 'var(--accent)', color: '#fff', borderRadius: 'var(--radius-md)', fontWeight: 700, textDecoration: 'none' }}>Go to Meetings</Link>
+                        </div>
+                    ) : (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                            {recentMeetings.map(m => (
+                                <Link to={`/meetings/${m.id}`} key={m.id} style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-xl)', padding: '16px 20px', textDecoration: 'none', color: 'inherit', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, transition: 'border-color 0.2s' }}>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <p style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{m.title}</p>
+                                        <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>{new Date(m.date).toLocaleDateString()} · {m.actionItems.length} action items</p>
+                                    </div>
+                                    <Badge variant={m.status === 'processed' ? 'paid' : 'free'}>{m.status}</Badge>
+                                </Link>
+                            ))}
+                            <Link to="/meetings" style={{ textAlign: 'center', color: 'var(--accent)', fontSize: 14, fontWeight: 600, padding: 8 }}>View all meetings →</Link>
+                        </div>
+                    )
                 ) : null}
             </main>
         </div>

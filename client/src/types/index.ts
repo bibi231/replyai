@@ -26,23 +26,50 @@ export interface ReplyTemplate {
     createdAt: string;
 }
 
+// ── Meeting Types ────────────────────────────────────────
+export interface ActionItem {
+    id: string;
+    text: string;
+    assignee: string;
+    dueDate?: string;
+    status: 'pending' | 'in_progress' | 'done';
+    priority: 'low' | 'medium' | 'high';
+}
+
+export interface Meeting {
+    id: string;
+    userId: string;
+    title: string;
+    date: string;
+    rawNotes: string;
+    summary?: string | null;
+    actionItems: ActionItem[];
+    tags: string[];
+    status: 'draft' | 'processed';
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface MeetingStats {
+    totalMeetings: number;
+    totalActionItems: number;
+    completedItems: number;
+    pendingItems: number;
+}
+
 export type PackType = 'starter' | 'pro' | 'power';
 
 export interface CreditPack {
     id: PackType;
     name: string;
-    price: number;        // NGN price (currency unit, not minor)
-    priceUSD: number;     // USD price (currency unit, decimals OK)
+    price: number;
+    priceUSD: number;
     credits: number;
     pricePerReply: string;
     pricePerReplyUSD: string;
     popular?: boolean;
 }
 
-/**
- * NGN and USD: both handled by GTSquad checkout
- * e.g. Starter 30 credits → $5 / ₦1,500
- */
 export const CREDIT_PACKS: CreditPack[] = [
     {
         id: 'starter',
@@ -74,34 +101,38 @@ export const CREDIT_PACKS: CreditPack[] = [
     },
 ];
 
-// ── Geo helpers ───────────────────────────────────────────
+// ── Geo helpers ───────────────────────────────────────
 const AFRICAN_TIMEZONES = [
-    'Africa/Lagos', 'Africa/Abidjan', 'Africa/Accra', 'Africa/Addis_Ababa',
-    'Africa/Algiers', 'Africa/Asmara', 'Africa/Bamako', 'Africa/Bangui',
-    'Africa/Banjul', 'Africa/Bissau', 'Africa/Blantyre', 'Africa/Brazzaville',
-    'Africa/Bujumbura', 'Africa/Cairo', 'Africa/Casablanca', 'Africa/Ceuta',
-    'Africa/Conakry', 'Africa/Dakar', 'Africa/Dar_es_Salaam', 'Africa/Djibouti',
-    'Africa/Douala', 'Africa/El_Aaiun', 'Africa/Freetown', 'Africa/Gaborone',
-    'Africa/Harare', 'Africa/Johannesburg', 'Africa/Juba', 'Africa/Kampala',
-    'Africa/Khartoum', 'Africa/Kigali', 'Africa/Kinshasa', 'Africa/Lagos',
-    'Africa/Libreville', 'Africa/Lome', 'Africa/Luanda', 'Africa/Lubumbashi',
-    'Africa/Lusaka', 'Africa/Malabo', 'Africa/Maputo', 'Africa/Maseru',
-    'Africa/Mbabane', 'Africa/Mogadishu', 'Africa/Monrovia', 'Africa/Nairobi',
-    'Africa/Ndjamena', 'Africa/Niamey', 'Africa/Nouakchott', 'Africa/Ouagadougou',
-    'Africa/Porto-Novo', 'Africa/Sao_Tome', 'Africa/Tripoli', 'Africa/Tunis',
-    'Africa/Windhoek',
+    'Africa/Lagos', 'Africa/Abidjan', 'Africa/Accra',
+    'Africa/Addis_Ababa', 'Africa/Algiers', 'Africa/Asmara',
+    'Africa/Bamako', 'Africa/Bangui', 'Africa/Banjul',
+    'Africa/Bissau', 'Africa/Blantyre', 'Africa/Brazzaville',
+    'Africa/Bujumbura', 'Africa/Cairo', 'Africa/Casablanca',
+    'Africa/Ceuta', 'Africa/Conakry', 'Africa/Dakar',
+    'Africa/Dar_es_Salaam', 'Africa/Djibouti', 'Africa/Douala',
+    'Africa/El_Aaiun', 'Africa/Freetown', 'Africa/Gaborone',
+    'Africa/Harare', 'Africa/Johannesburg', 'Africa/Juba',
+    'Africa/Kampala', 'Africa/Khartoum', 'Africa/Kigali',
+    'Africa/Kinshasa', 'Africa/Libreville', 'Africa/Lome',
+    'Africa/Luanda', 'Africa/Lubumbashi', 'Africa/Lusaka',
+    'Africa/Malabo', 'Africa/Maputo', 'Africa/Maseru',
+    'Africa/Mbabane', 'Africa/Mogadishu', 'Africa/Monrovia',
+    'Africa/Nairobi', 'Africa/Ndjamena', 'Africa/Niamey',
+    'Africa/Nouakchott', 'Africa/Ouagadougou',
+    'Africa/Porto-Novo', 'Africa/Sao_Tome', 'Africa/Tripoli',
+    'Africa/Tunis', 'Africa/Windhoek',
 ];
 
-/**
- * Best-effort geo: returns 'NGN' for likely Africa-based users, else 'USD'.
- * Uses Intl timezone (works offline, no API call). Honours localStorage override.
- */
 export function detectCurrency(): 'NGN' | 'USD' {
     try {
-        const override = typeof window !== 'undefined' ? window.localStorage.getItem('replyai:currency') : null;
+        const override = typeof window !== 'undefined'
+            ? window.localStorage.getItem('replyai:currency')
+            : null;
         if (override === 'NGN' || override === 'USD') return override;
         const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-        if (tz.startsWith('Africa/') || AFRICAN_TIMEZONES.includes(tz)) return 'NGN';
+        if (tz.startsWith('Africa/') || AFRICAN_TIMEZONES.includes(tz)) {
+            return 'NGN';
+        }
         return 'USD';
     } catch {
         return 'USD';

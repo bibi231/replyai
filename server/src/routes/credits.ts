@@ -39,37 +39,36 @@ router.post('/gtsquad-checkout', verifyFirebaseToken, async (req: any, res: any,
         const txRef = `replyai_${userId.slice(0, 10)}_${Date.now()}`;
         const callbackUrl = 'https://replyai.com.ng';
 
-        // Import axios dynamically if needed, or rely on top level import if it exists. 
-        // We'll require it since this file doesn't have it imported.
-        const axios = (await import('axios')).default;
-
-        const response = await axios.post(
+        const squadRes = await fetch(
             'https://api-d.squadco.com/transaction/initiate',
             {
-                email,
-                amount,
-                initiate_type: 'inline',
-                currency: cur,
-                callback_url: callbackUrl,
-                transaction_ref: txRef,
-                metadata: { pack: packId, userId, credits: pack.credits }
-            },
-            {
-                headers: { 'Authorization': `Bearer ${secretKey}` }
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${secretKey}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email,
+                    amount,
+                    initiate_type: 'inline',
+                    currency: cur,
+                    callback_url: callbackUrl,
+                    transaction_ref: txRef,
+                    metadata: { pack: packId, userId, credits: pack.credits }
+                }),
             }
         );
 
-        if (response.data && response.data.data && response.data.data.checkout_url) {
-            return res.json({
-                mode: 'redirect',
-                checkoutUrl: response.data.data.checkout_url
-            });
+        const data: any = await squadRes.json();
+        if (data?.data?.checkout_url) {
+            return res.json({ mode: 'redirect', checkoutUrl: data.data.checkout_url });
         }
 
-        return res.status(502).json({ message: 'Failed to generate Squad payment link' });
-    } catch (err: any) { 
-        console.error('Squad Error:', err?.response?.data || err?.message);
-        next(err); 
+        console.error('Squad Error:', data);
+        return res.status(502).json({ message: 'Failed to generate Squad payment link', detail: data });
+    } catch (err: any) {
+        console.error('Squad Error:', err?.message);
+        next(err);
     }
 });
 

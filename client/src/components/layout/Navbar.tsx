@@ -59,6 +59,7 @@ export function Navbar() {
                     {user ? (
                         <>
                             <Link to="/app" className={`navbar-link ${pathname === '/app' ? 'active' : ''}`}>Generator</Link>
+                            <Link to="/meetings" className={`navbar-link ${pathname.startsWith('/meetings') ? 'active' : ''}`}>Meetings</Link>
                             <Link to="/dashboard" className={`navbar-link ${pathname === '/dashboard' ? 'active' : ''}`}>History</Link>
                             <Link to="/settings" className={`navbar-link navbar-link-settings ${pathname === '/settings' ? 'active' : ''}`}>Settings</Link>
                             <Link to="/settings" className="navbar-settings-icon" aria-label="Settings" title="Settings">
