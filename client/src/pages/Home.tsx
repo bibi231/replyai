@@ -71,6 +71,17 @@ export function Home() {
     }
   }, [isDemoOpen]);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-visible'); });
+      },
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   const activeDemo = DEMO_EMAILS[demoIdx];
 
   const handleNewsletter = (e: React.FormEvent) => {
@@ -88,6 +99,9 @@ export function Home() {
       <section className="hero">
         <div className="hero-bg" aria-hidden>
           <div className="hero-glow" />
+          <div className="hero-orb hero-orb-1" />
+          <div className="hero-orb hero-orb-2" />
+          <div className="hero-orb hero-orb-3" />
           <div className="hero-grid" />
         </div>
 
@@ -104,7 +118,7 @@ export function Home() {
               <span className="hero-cursor">|</span>
             </span>
             <br />
-            in seconds.
+            <span className="hero-headline-accent">in seconds.</span>
           </h1>
 
           <p className="hero-sub">
@@ -239,15 +253,15 @@ export function Home() {
       {/* How it works */}
       <section className="section">
         <div className="section-inner">
-          <div className="section-label">How it works</div>
-          <h2 className="section-title">Three clicks. Zero effort.</h2>
+          <div className="section-label" data-animate>How it works</div>
+          <h2 className="section-title" data-animate data-delay="1">Three clicks. Zero effort.</h2>
           <div className="steps-grid">
             {[
               { step: '01', title: 'Install the extension', desc: 'Add ReplyAI to Chrome in 10 seconds. Sign in with Google. Done.' },
               { step: '02', title: 'Open any email', desc: 'Visit Gmail. Open an email you need to reply to. The ⚡ ReplyAI button appears automatically.' },
               { step: '03', title: 'Pick a draft and insert', desc: 'Choose Professional, Friendly, Firm, or Custom. Click Generate. Pick the best draft and insert it directly into Gmail.' },
-            ].map((s) => (
-              <div key={s.step} className="step-card">
+            ].map((s, i) => (
+              <div key={s.step} className="step-card" data-animate data-delay={String(i + 2)}>
                 <div className="step-number">{s.step}</div>
                 <h3 className="step-title">{s.title}</h3>
                 <p className="step-desc">{s.desc}</p>
@@ -260,8 +274,8 @@ export function Home() {
       {/* Tones section update to include Language highlight */}
       <section className="section section-alt">
         <div className="section-inner">
-          <div className="section-label">Multilingual Support</div>
-          <h2 className="section-title">Reply in the way they understand.</h2>
+          <div className="section-label" data-animate>Multilingual Support</div>
+          <h2 className="section-title" data-animate data-delay="1">Reply in the way they understand.</h2>
           <div className="langs-grid">
             {[
                 { name: 'English', icon: '🇬🇧', desc: 'Global standards for professional outreach.' },
@@ -269,8 +283,8 @@ export function Home() {
                 { name: 'Yoruba', icon: '🇳🇬', desc: 'Respectful and culturally aligned responses.' },
                 { name: 'Hausa', icon: '🇳🇬', desc: 'Formal and business-ready Northern dialects.' },
                 { name: 'French', icon: '🇫🇷', desc: 'Connect with our Francophone neighbors seamlessly.' }
-            ].map(l => (
-                <div key={l.name} className="lang-feature-card">
+            ].map((l, i) => (
+                <div key={l.name} className="lang-feature-card" data-animate data-delay={String(i + 1)}>
                     <span className="lang-icon">{l.icon}</span>
                     <h3>{l.name}</h3>
                     <p>{l.desc}</p>
