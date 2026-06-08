@@ -131,6 +131,60 @@
 }
 
 /* ==========================================================================
+   Newsletter inline block (footer)
+   ========================================================================== */
+.rai-footer-nl {
+  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+  padding: 22px 24px;
+  background: rgba(255,255,255,.025);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 14px;
+  margin-bottom: 32px;
+}
+.rai-footer-nl-copy { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 4px; }
+.rai-footer-nl-eyebrow {
+  font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+  color: #a855f7; font-weight: 700;
+}
+.rai-footer-nl-text { font-size: 13px; color: #8b91a3; line-height: 1.5; }
+.rai-footer-nl-form { display: flex; gap: 8px; flex-shrink: 0; }
+.rai-footer-nl-input {
+  width: 220px; padding: 10px 14px; font-size: 13.5px;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 9px; color: #fff; font-family: inherit;
+  transition: border-color .15s;
+}
+.rai-footer-nl-input:focus { outline: none; border-color: rgba(168,85,247,.6); }
+.rai-footer-nl-input::placeholder { color: #5b6072; }
+.rai-footer-nl-btn {
+  padding: 10px 18px; font-weight: 700; font-size: 13px; cursor: pointer;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: #fff; border: 0; border-radius: 9px; white-space: nowrap;
+  transition: transform .12s, box-shadow .15s;
+}
+.rai-footer-nl-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(168,85,247,.3); }
+.rai-footer-nl-btn:disabled { opacity: .6; cursor: not-allowed; }
+.rai-footer-nl-success {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px;
+  background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3);
+  border-radius: 9px; color: #86efac; font-size: 13.5px;
+}
+.rai-footer-nl-check {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #22c55e; color: #0a0e1a;
+  display: grid; place-items: center; font-weight: 800; font-size: 12px;
+}
+.rai-footer-nl-err { font-size: 12px; color: #fca5a5; margin-top: 6px; }
+.rai-footer-tw-link { color: inherit; text-decoration: none; }
+.rai-footer-tw-link:hover { text-decoration: underline; }
+@media (max-width: 720px) {
+  .rai-footer-nl { flex-direction: column; align-items: flex-start; }
+  .rai-footer-nl-form { width: 100%; }
+  .rai-footer-nl-input { flex: 1; width: auto; }
+}
+
+/* ==========================================================================
    Newsletter Popup
    ========================================================================== */
 .rai-nl-overlay{
