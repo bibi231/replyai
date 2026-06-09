@@ -36,7 +36,7 @@ router.post('/gtsquad-checkout', verifyFirebaseToken, async (req: any, res: any,
 
         const cur = String(currency).toUpperCase() === 'USD' ? 'USD' : 'NGN';
         const amount = cur === 'USD' ? pack.usdCents : pack.ngnKobo;
-        const txRef = `replyai_${userId.slice(0, 10)}_${Date.now()}`;
+        const txRef = `RAI-${userId.slice(0, 10)}-${Date.now()}`;
         const callbackUrl = 'https://replyai.com.ng';
 
         const squadRes = await fetch(
