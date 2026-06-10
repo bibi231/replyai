@@ -7,6 +7,6 @@
     "analytics": { "disabled": false },
     "rewrites": [
         { "source": "/_vercel/insights/(.*)", "destination": "/_vercel/insights/$1" },
-        { "source": "/(.*)", "destination": "/" }
+        { "source": "/((?!api/|_vercel/|.*\\.).*)", "destination": "/index.html" }
     ]
 }

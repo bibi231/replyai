@@ -3,6 +3,7 @@ import { addPaidCredits } from '../services/creditsService.js';
 import { db } from '../db/index.js';
 import { logger } from '../utils/logger.js';
 import crypto from 'crypto';
+import { sendPaymentSuccessEmail } from '../lib/email/send.js';
 
 const router = Router();
 
@@ -59,6 +60,12 @@ router.post('/gtsquad', async (req: any, res: any) => {
 
             await addPaidCredits(user.id, credits, reference, packId, data.amount ?? 0);
             logger.info(`GTSquad: Added ${credits} credits to ${email} (pack=${packId})`);
+            sendPaymentSuccessEmail(user.id, email, {
+              credits,
+              pack: packId,
+              amountNgn: (data.amount ?? 0) * 100,
+              txRef: reference,
+            }).catch(console.error);
         }
 
         return res.status(200).send('OK');

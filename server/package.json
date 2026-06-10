@@ -12,6 +12,8 @@
     "firebase-admin": "^13.0.0",
     "groq-sdk": "^1.1.1",
     "helmet": "^8.0.0",
+    "node-cron": "^3.0.3",
+    "resend": "^4.0.0",
     "uuid": "^11.0.0"
   },
   "devDependencies": {

@@ -1,47 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
-
-  <url>
-    <loc>https://replyai.com.ng/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-
-  <url>
-    <loc>https://replyai.com.ng/pricing</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://replyai.com.ng/privacy</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <url>
-    <loc>https://replyai.com.ng/terms</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <url>
-    <loc>https://replyai.com.ng/refund</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
-
-  <url>
-    <loc>https://replyai.com.ng/faq</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://replyai.com.ng/blog</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://replyai.com.ng/</loc><lastmod>2026-06-10</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://replyai.com.ng/pricing</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://replyai.com.ng/faq</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://replyai.com.ng/blog</loc><lastmod>2026-06-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://replyai.com.ng/privacy</loc><lastmod>2026-06-10</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://replyai.com.ng/terms</loc><lastmod>2026-06-10</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://replyai.com.ng/refund</loc><lastmod>2026-06-10</lastmod><changefreq>yearly</changefreq><priority>0.2</priority></url>
+  <url><loc>https://replyai.com.ng/blog/ai-communication-tools-nigeria-future</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://replyai.com.ng/blog/ai-customer-service-nigerian-smes</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://replyai.com.ng/blog/ai-vs-human-writing</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://replyai.com.ng/blog/email-phrases-nigerians-confuse-international-clients</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://replyai.com.ng/blog/email-templates-nigerian-freelancers</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://replyai.com.ng/blog/gmail-productivity-tips-nigeria</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://replyai.com.ng/blog/how-to-handle-complaint-email</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://replyai.com.ng/blog/how-to-summarize-meeting-5-minutes</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://replyai.com.ng/blog/how-to-write-cold-emails-nigeria</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://replyai.com.ng/blog/how-to-write-firm-polite-followup</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://replyai.com.ng/blog/how-to-write-professional-email-replies</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://replyai.com.ng/blog/meeting-action-items-why-they-disappear</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://replyai.com.ng/blog/meeting-notes-nobody-reads</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://replyai.com.ng/blog/nigerian-business-email-etiquette-2026</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://replyai.com.ng/blog/whatsapp-vs-email-business-nigeria</loc><lastmod>2026-06-10</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 </urlset>
