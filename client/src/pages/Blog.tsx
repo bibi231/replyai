@@ -12,7 +12,7 @@ export function Blog() {
     <div className="home">
       <Navbar />
       <main style={{ maxWidth: 860, margin: '0 auto', padding: '120px 24px 80px' }}>
-        <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 36, marginBottom: 8 }}>Blog</h1>
+        <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(26px, 6vw, 36px)', marginBottom: 8 }}>Blog</h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: 16, marginBottom: 48 }}>
           Guides on AI communication, email productivity, and meeting management.
         </p>

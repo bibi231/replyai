@@ -37,7 +37,7 @@ export function BlogPost() {
           ))}
         </div>
 
-        <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 32, lineHeight: 1.2, marginBottom: 16 }}>
+        <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(24px, 5vw, 32px)', lineHeight: 1.2, marginBottom: 16 }}>
           {post.title}
         </h1>
 
@@ -102,10 +102,17 @@ export function BlogPost() {
         .rai-prose code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 14px; }
         .rai-prose pre { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 20px; overflow-x: auto; margin-bottom: 24px; }
         .rai-prose pre code { background: none; padding: 0; }
-        .rai-prose table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 15px; }
+        .rai-prose table { display: block; overflow-x: auto; width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 15px; }
         .rai-prose th { text-align: left; padding: 10px 14px; background: rgba(255,255,255,0.06); color: var(--text-primary); font-weight: 600; }
         .rai-prose td { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.06); }
         .rai-prose blockquote { border-left: 3px solid var(--accent); padding-left: 16px; margin: 0 0 18px; color: var(--text-secondary); font-style: italic; }
+        @media (max-width: 640px) {
+          .rai-prose { font-size: 15px; }
+          .rai-prose h2 { font-size: 19px; }
+          .rai-prose h3 { font-size: 16px; }
+          .rai-prose table { font-size: 13px; }
+          .rai-prose th, .rai-prose td { padding: 8px 10px; }
+        }
       `}</style>
     </div>
   );
