@@ -11,6 +11,8 @@ import templatesRoutes from './routes/templates.js';
 import userRoutes from './routes/user.js';
 import newsletterRoutes from './routes/newsletter.js';
 import meetingsRoutes from './routes/meetings.js';
+import adminRoutes from './routes/admin.js';
+import blogRoutes from './routes/blog.js';
 import { AIAllModelsFailedError, AIParseError } from './services/aiService.js';
 import { logger } from './utils/logger.js';
 
@@ -52,6 +54,8 @@ app.use('/api/templates', templatesRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/meetings', meetingsRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/blog', blogRoutes);
 
 app.get('/health', (_req: Request, res: Response) => {
     res.json({ status: 'ok', timestamp: Date.now() });

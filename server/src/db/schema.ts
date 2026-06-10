@@ -1,4 +1,4 @@
-import { pgTable, varchar, text, integer, timestamp, uuid, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, varchar, text, integer, timestamp, uuid, jsonb, boolean } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
     id: varchar('id', { length: 128 }).primaryKey(),
@@ -12,6 +12,7 @@ export const users = pgTable('users', {
     defaultTone: varchar('default_tone', { length: 50 }).default('professional'),
     defaultLanguage: varchar('default_language', { length: 20 }).default('en'),
     showTips: integer('show_tips').default(1),
+    platformRole: varchar('platform_role', { length: 20 }), // 'super_admin' | 'admin' | 'editor' | null
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at').defaultNow(),
 });
@@ -71,4 +72,18 @@ export const payments = pgTable('payments', {
     status: varchar('status', { length: 20 }).default('pending'),
     pack: varchar('pack', { length: 50 }),
     createdAt: timestamp('created_at').defaultNow(),
+});
+
+export const blogPosts = pgTable('blog_posts', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    slug: varchar('slug', { length: 255 }).notNull().unique(),
+    title: varchar('title', { length: 500 }).notNull(),
+    excerpt: text('excerpt').notNull(),
+    content: text('content').notNull(),
+    author: varchar('author', { length: 255 }).notNull().default('ReplyAI Team'),
+    tags: jsonb('tags').$type<string[]>().default([]),
+    readingTime: integer('reading_time').default(5),
+    published: boolean('published').default(false),
+    createdAt: timestamp('created_at').defaultNow(),
+    updatedAt: timestamp('updated_at').defaultNow(),
 });

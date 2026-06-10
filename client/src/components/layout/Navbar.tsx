@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { logOut } from '../../lib/firebase';
 
+const PLATFORM_ADMINS = ['peterjohn2343@gmail.com', 'bitrusgadzama02@gmail.com'];
+
 export function Navbar() {
     const user = useAuthStore(s => s.user);
     const credits = useAuthStore(s => s.credits);
@@ -12,6 +14,7 @@ export function Navbar() {
     const freeLeft = credits?.free ?? 0;
     const paidLeft = credits?.paid ?? 0;
     const hasCredits = freeLeft > 0 || paidLeft > 0;
+    const isAdmin = !!user?.email && PLATFORM_ADMINS.includes(user.email);
 
     // Close menu on navigation
     React.useEffect(() => {
@@ -53,7 +56,19 @@ export function Navbar() {
                     )}
                     
                     <Link to="/pricing" className={`navbar-link ${pathname === '/pricing' ? 'active' : ''}`}>Pricing</Link>
-                    
+                    {isAdmin && (
+                        <Link to="/admin" className={`navbar-link ${pathname === '/admin' ? 'active' : ''}`} style={{
+                            display: 'flex', alignItems: 'center', gap: 4,
+                            color: 'var(--accent)', border: '1px solid rgba(var(--accent-rgb),0.3)',
+                            padding: '3px 10px', borderRadius: 6, fontSize: 13, fontWeight: 600,
+                        }}>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                            Admin
+                        </Link>
+                    )}
+
                     {user ? (
                         <>
                             <Link to="/app" className={`navbar-link ${pathname === '/app' ? 'active' : ''}`}>Generator</Link>

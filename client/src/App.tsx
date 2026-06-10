@@ -27,6 +27,7 @@ import { CookieBanner } from './components/layout/CookieBanner';
 import { NewsletterPopup } from './components/marketing/NewsletterPopup';
 import { Blog } from './pages/Blog';
 import { BlogPost } from './pages/BlogPost';
+import { AdminPage } from './pages/AdminPage';
 
 export default function App() {
   const isAuthLoading = useAuthStore(s => s.isAuthLoading);
@@ -57,6 +58,7 @@ export default function App() {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/refund" element={<Refund />} />
