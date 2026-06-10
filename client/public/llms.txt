@@ -1,0 +1,31 @@
+# ReplyAI
+
+> AI-powered email reply generator and meeting notes tool for Nigerian businesses and professionals.
+
+ReplyAI generates 3 professional email reply drafts in seconds from any email you paste in. It also turns meeting notes into structured summaries with action items and priorities.
+
+## Core features
+
+- **Email replies**: Paste any email, pick a tone (Professional, Friendly, Firm, Apologetic, Custom), get 3 reply options instantly
+- **Meeting notes**: Paste raw notes → structured summary + action items with owners and deadlines
+- **Languages**: English, Nigerian Pidgin, Yoruba, Hausa, French
+- **Tones**: 5 tone options per generation
+- **History**: Save and revisit all past replies
+- **Templates**: Save frequent reply templates
+- **Chrome extension**: Reply directly from Gmail and any web inbox
+
+## Pricing
+
+Free tier: 5 reply credits/month. Paid packs from NGN 1,500 (~$1 USD) for 30 credits.
+
+## Built for
+
+Nigerian business owners, freelancers, customer service teams, and anyone who writes professional emails. Particularly useful for teams that communicate in Nigerian Pidgin or local languages alongside English.
+
+## Links
+
+- Homepage: https://replyai.com.ng
+- Blog: https://replyai.com.ng/blog
+- Pricing: https://replyai.com.ng/pricing
+- FAQ: https://replyai.com.ng/faq
+- Part of the TrueWeb Solutions portfolio: https://trueweb.com.ng
