@@ -74,6 +74,16 @@ export const payments = pgTable('payments', {
     createdAt: timestamp('created_at').defaultNow(),
 });
 
+export const blogComments = pgTable('blog_comments', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    postSlug: varchar('post_slug', { length: 255 }).notNull(),
+    name: varchar('name', { length: 255 }).notNull(),
+    email: varchar('email', { length: 255 }).notNull(),
+    content: text('content').notNull(),
+    approved: boolean('approved').default(false),
+    createdAt: timestamp('created_at').defaultNow(),
+});
+
 export const blogPosts = pgTable('blog_posts', {
     id: uuid('id').primaryKey().defaultRandom(),
     slug: varchar('slug', { length: 255 }).notNull().unique(),

@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -28,6 +28,12 @@ export const logOut = async () => {
 
 export const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
+    return await signInWithPopup(auth, provider);
+};
+
+export const signInWithGitHub = async () => {
+    const provider = new GithubAuthProvider();
+    provider.addScope('user:email');
     return await signInWithPopup(auth, provider);
 };
 
