@@ -114,6 +114,7 @@ export function UnifiedFooter() {
               <li><Link to="/meetings">Meeting Notes</Link></li>
               <li><Link to="/dashboard">Dashboard</Link></li>
               <li><Link to="/pricing">Pricing</Link></li>
+              <li><Link to="/blog">Blog</Link></li>
             </ul>
           </div>
 
