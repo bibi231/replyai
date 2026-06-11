@@ -3,14 +3,15 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "outDir": "dist",
-    "strict": false,
+    "rootDir": "./src",
+    "outDir": "./dist",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "rootDir": "./src",
-    "noEmitOnError": false
+    "strict": false,
+    "noEmitOnError": false,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }
