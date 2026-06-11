@@ -5,8 +5,8 @@ import { emailLog } from '../../db/schema.js';
 import { and, eq, gte } from 'drizzle-orm';
 
 const SITE = 'replyai';
-const FROM = 'ReplyAI <hello@replyai.com.ng>';
-const REPLY_TO = 'support@replyai.com.ng';
+const FROM = process.env.EMAIL_FROM || 'ReplyAI <hello@replyai.com.ng>';
+const REPLY_TO = process.env.EMAIL_REPLY_TO || 'support@replyai.com.ng';
 
 type Flow =
   | 'welcome' | 'verify_email' | 'password_reset'

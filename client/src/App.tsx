@@ -28,6 +28,7 @@ import { NewsletterPopup } from './components/marketing/NewsletterPopup';
 import { Blog } from './pages/Blog';
 import { BlogPost } from './pages/BlogPost';
 import { AdminPage } from './pages/AdminPage';
+import NotFound from './pages/NotFound';
 
 export default function App() {
   const isAuthLoading = useAuthStore(s => s.isAuthLoading);
@@ -78,6 +79,7 @@ export default function App() {
           <Route path="/dashboard" element={
             <AuthGuard><Dashboard /></AuthGuard>
           } />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
 
