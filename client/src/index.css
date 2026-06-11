@@ -1142,3 +1142,29 @@ body {
 [data-delay="3"] { transition-delay: 0.24s; }
 [data-delay="4"] { transition-delay: 0.32s; }
 [data-delay="5"] { transition-delay: 0.40s; }
+
+/* ─── Polish layer (2026-06) ───────────────────────────────── */
+::selection { background: rgba(108, 99, 255, 0.32); color: var(--text-primary); }
+
+* { scrollbar-width: thin; scrollbar-color: rgba(108,99,255,0.35) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(108,99,255,0.45), rgba(108,99,255,0.15));
+  border-radius: 8px; border: 2px solid transparent; background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(108,99,255,0.55); }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+.nav-cta, .navbar-cta-small, button[class*="btn"] {
+  transition: transform 0.15s cubic-bezier(0.2,0.8,0.4,1), box-shadow 0.2s ease, background 0.2s ease;
+}
+.nav-cta:hover, .navbar-cta-small:hover { transform: translateY(-1.5px); box-shadow: 0 8px 28px var(--accent-glow); }
+.nav-cta:active, .navbar-cta-small:active { transform: scale(0.985); }
+
+a { text-underline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

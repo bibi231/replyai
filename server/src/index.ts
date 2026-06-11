@@ -3,6 +3,7 @@ import 'dotenv/config';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import replyRoutes from './routes/reply.js';
 import creditsRoutes from './routes/credits.js';
 import authRoutes from './routes/auth.js';
@@ -45,7 +46,26 @@ app.use(cors({
 }));
 
 app.use('/api/webhook', express.raw({ type: 'application/json' }), webhookRoutes);
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
+
+// ─── Rate limiting ───────────────────────────────────────────
+// Global: generous cap to absorb abuse without hurting real users.
+app.use(rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 600,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+}));
+// Strict: auth + payment initiation are brute-force / card-testing targets.
+const strictLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 30,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+    message: { error: 'RATE_LIMITED', message: 'Too many attempts. Try again later.' },
+});
+app.use('/api/auth', strictLimiter);
+app.use('/api/credits', strictLimiter);
 
 app.use('/api/reply', replyRoutes);
 app.use('/api/credits', creditsRoutes);
