@@ -15,3 +15,4 @@ extension/icon.png
 # Local backtmp-awesome-ai-agents
 
 .vercel
+client/.env.vercel
