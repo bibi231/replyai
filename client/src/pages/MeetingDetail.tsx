@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/layout/Navbar';
 import { Spinner } from '../components/ui/Spinner';
@@ -26,7 +26,41 @@ export function MeetingDetail() {
     const [summarizing, setSummarizing] = useState(false);
     const [extracting, setExtracting] = useState(false);
     const [aiError, setAiError] = useState<string | null>(null);
+
+    // Live audio transcription (browser Web Speech API — free, no key).
+    const [recording, setRecording] = useState(false);
+    const [interim, setInterim] = useState('');
+    const recognitionRef = useRef<any>(null);
     useDocTitle(meeting?.title || 'Meeting Detail');
+
+    function toggleTranscribe() {
+        const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+        if (!SR) { setAiError('Live transcription needs Chrome or Edge (the Web Speech API is not available in this browser).'); return; }
+        if (recording) { recognitionRef.current?.stop(); return; }
+        setAiError(null);
+        if (!editing) startEdit();
+        const rec = new SR();
+        rec.continuous = true;
+        rec.interimResults = true;
+        rec.lang = 'en-US';
+        rec.onresult = (e: any) => {
+            let finalText = '';
+            let interimText = '';
+            for (let i = e.resultIndex; i < e.results.length; i++) {
+                const t = e.results[i][0].transcript;
+                if (e.results[i].isFinal) finalText += t + ' '; else interimText += t;
+            }
+            if (finalText) setEditNotes(prev => (prev ? prev.trimEnd() + ' ' : '') + finalText.trim());
+            setInterim(interimText);
+        };
+        rec.onend = () => { setRecording(false); setInterim(''); };
+        rec.onerror = () => { setRecording(false); setInterim(''); };
+        recognitionRef.current = rec;
+        rec.start();
+        setRecording(true);
+    }
+
+    useEffect(() => () => { recognitionRef.current?.stop?.(); }, []);
 
     async function fetchMeeting() {
         setIsLoading(true);
@@ -185,11 +219,25 @@ export function MeetingDetail() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, alignItems: 'start' }} className="meeting-split">
                     {/* Left: Notes */}
                     <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-xl)', padding: 24 }}>
-                        <h3 style={{ fontWeight: 700, marginBottom: 16 }}>Meeting Notes</h3>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, gap: 10, flexWrap: 'wrap' }}>
+                            <h3 style={{ fontWeight: 700 }}>Meeting Notes</h3>
+                            <button onClick={toggleTranscribe} title="Live transcription using your browser (free)" style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '7px 14px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', cursor: 'pointer', fontSize: 12.5, fontWeight: 700, background: recording ? 'rgba(255,71,87,0.12)' : 'var(--bg-input)', color: recording ? '#FF4757' : 'var(--text-secondary)' }}>
+                                <span style={{ width: 8, height: 8, borderRadius: '50%', background: recording ? '#FF4757' : 'var(--text-muted)', animation: recording ? 'rai-pulse 1s infinite' : 'none' }} />
+                                {recording ? 'Stop recording' : '🎙️ Record & transcribe'}
+                            </button>
+                        </div>
                         {editing ? (
                             <textarea value={editNotes} onChange={e => setEditNotes(e.target.value)} rows={16} style={{ width: '100%', padding: '10px 14px', background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', color: 'var(--text-primary)', fontSize: 14, resize: 'vertical', lineHeight: 1.6 }} />
                         ) : (
                             <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: 14, lineHeight: 1.6, color: 'var(--text-secondary)' }}>{meeting.rawNotes}</pre>
+                        )}
+                        {(recording || interim) && (
+                            <p style={{ marginTop: 12, fontSize: 13, color: 'var(--text-muted)', fontStyle: 'italic', borderTop: '1px solid var(--border-subtle)', paddingTop: 10 }}>
+                                {recording && <strong style={{ color: '#FF4757', fontStyle: 'normal' }}>Listening… </strong>}{interim}
+                            </p>
+                        )}
+                        {recording && (
+                            <p style={{ marginTop: 6, fontSize: 11, color: 'var(--text-muted)' }}>Transcribed text appends to your notes. Click Save when done, then Summarize.</p>
                         )}
                     </div>
 
@@ -252,6 +300,7 @@ export function MeetingDetail() {
             </main>
 
             <style>{`
+                @keyframes rai-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
                 @media (max-width: 768px) {
                     .meeting-split { grid-template-columns: 1fr !important; }
                 }
