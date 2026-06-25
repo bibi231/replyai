@@ -29,6 +29,7 @@ import { Blog } from './pages/Blog';
 import { BlogPost } from './pages/BlogPost';
 import { AdminPage } from './pages/AdminPage';
 import NotFound from './pages/NotFound';
+import { AskAI } from './components/AskAI';
 
 export default function App() {
   const isAuthLoading = useAuthStore(s => s.isAuthLoading);
@@ -88,6 +89,7 @@ export default function App() {
       <ToastContainer />
       <CookieBanner />
       <NewsletterPopup />
+      <AskAI />
     </div>
   );
 }
