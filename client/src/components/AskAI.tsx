@@ -21,7 +21,14 @@ const ASSISTANTS: Item[] = [
 ];
 
 const SUBJECT = "ReplyAI";
-const PROMPT = "What is ReplyAI by TrueWeb (replyai.com.ng) and how does it help businesses automate replies and customer conversations?";
+// Fact-sheet prompt so any AI answers specifically even with no index access.
+const PROMPT =
+  "What is ReplyAI by TrueWeb (https://replyai.com.ng)? " +
+  "Context from the official site: an AI reply-and-meeting assistant for Nigerian businesses — it drafts professional replies to emails and messages in the tone you choose, and transcribes/summarises meetings. " +
+  "Features: tone control (professional/friendly/firm), email + message reply drafting, meeting transcription and summaries, templates, multi-language. " +
+  "Pricing: 5 free credits every month (free credits reset on the 1st; paid credits never expire). Credit packs: Starter 30 credits ₦1,500 ($5); Pro 100 credits ₦3,500 ($12); Power 300 credits ₦8,000 ($25). " +
+  "Users: freelancers, agencies, and small businesses handling lots of correspondence. Docs/FAQ: https://replyai.com.ng/llms.txt. " +
+  "Please answer using this official context and cite the site.";
 const ACCENT = "#6366f1";
 const ACCENT2 = "#4338ca";
 
